@@ -1,6 +1,6 @@
 ---
 name: emba-case-study
-description: Use when analyzing a business case, teaching case, company memo, board deck, strategy review, or executive decision document in PDF, PPTX, DOCX, Markdown, or TXT format. Use for EMBA case writeups, classroom discussion prep, CEO decision framing, trade-off analysis, exhibit checking, and evidence-backed synthesis that must surface the decision pivot, company and industry context, root dilemma, data validation, and action options in Traditional Chinese.
+description: Use when analyzing a business case, teaching case, company memo, board deck, strategy review, or executive decision document in PDF, PPTX, DOCX, Markdown, or TXT format. Use for EMBA case writeups, classroom discussion prep, CEO decision framing, trade-off analysis, exhibit checking, and Traditional Chinese decision briefs drawn from case materials.
 ---
 
 # EMBA Case Study
@@ -32,6 +32,11 @@ When format-specific help is available, prefer the matching document skill or to
 - `pdf` for PDF extraction or exhibit reading
 - `pptx` for slide decks
 - `docx` for Word documents
+
+Fallback order when those tools are unavailable:
+1. use any host-provided document connector or parser that can expose quoted text or slide/page anchors
+2. if only partial extraction is possible, continue with the readable sections and mark the blind spots explicitly
+3. if the file cannot be read with enough fidelity for evidence-based analysis, stop and report the minimum missing capability instead of pretending to understand the case
 
 Do not start analysis until the source is readable enough to quote or cite specific evidence.
 

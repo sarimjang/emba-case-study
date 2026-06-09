@@ -10,7 +10,7 @@ Use this template when the user wants a full case writeup, class-prep brief, or 
 - 為何不能再拖
 - 延遲決策的代價是什麼
 
-Suggested close:
+建議收尾句：
 `本個案真正的張力，不只是事件本身，而是主角必須在資訊不完全、時間有限、組織壓力升高的情況下做出關鍵選擇。`
 
 ## 二、公司與產業總體檢
@@ -71,7 +71,7 @@ Suggested close:
 
 ## 五、課堂思辨與行動決策
 
-For each option, write:
+每個選項都要回答：
 
 ### 選項一：{名稱}
 - How：怎麼做
@@ -88,9 +88,9 @@ For each option, write:
 - Why：
 - Trade-off：
 
-Close with either:
-- a neutral teaching question set for classroom discussion, or
-- a manager recommendation if the user asked for a point of view
+收尾時二選一：
+- 提出中性的課堂討論題組
+- 若使用者明確要求立場，給出管理層建議
 
 ## 附錄與參考資料
 

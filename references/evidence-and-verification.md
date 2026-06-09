@@ -1,53 +1,53 @@
-# Evidence And Verification
+# 證據與交叉驗證
 
-Do not trust exhibits just because the case package includes them.
+不要因為個案包裡附了圖表或附錄，就直接相信它們。
 
-## 1. Internal Cross-Checks
+## 1. 內部交叉檢查
 
-### Financial Tables
-- revenue growth matches period totals
-- gross margin matches revenue minus cost of goods sold
-- operating margin matches operating income over revenue
-- balance sheet changes roughly align with the narrative
-- debt, cash, and capex trends do not contradict the strategy story
+### 財務表格
+- 營收成長是否和各期間加總一致
+- 毛利率是否符合營收減銷貨成本後的結果
+- 營業利益率是否符合營業利益除以營收
+- 資產負債表的重要變化是否與敘事大致一致
+- 負債、現金與資本支出趨勢是否與策略故事衝突
 
-### Unit Economics Or Operations
-- unit price x volume roughly explains revenue
-- utilization assumptions do not exceed practical capacity
-- fixed and variable cost logic is not inverted
-- inventory, receivables, or payables shifts match the operating story
+### 單位經濟或營運邏輯
+- 單價乘以銷量是否大致能解釋營收
+- 產能利用率假設是否超出實務上限
+- 固定成本與變動成本邏輯是否顛倒
+- 存貨、應收、應付的變動是否符合營運敘事
 
-### Narrative Consistency
-- does management's stated priority match resource allocation
-- do interview excerpts support or contradict the formal strategy
-- does the problem appear temporary, cyclical, or structural
+### 敘事一致性
+- 管理層口中的優先事項是否真的反映在資源配置
+- 訪談摘錄是支持還是反駁正式策略
+- 問題看起來是暫時性、循環性，還是結構性
 
-## 2. External Verification Triggers
+## 2. 何時需要外部驗證
 
-Browse for external evidence when any of these are true:
-- the case mentions law, regulation, or standards that may have changed
-- market size or competitor position is central to the conclusion
-- the user explicitly asks for verification
-- the case numbers look implausible and need outside anchors
+符合以下情況時，再做外部驗證：
+- 個案提到的法律、法規或標準可能已經變動
+- 市場規模或競爭者位置是結論的關鍵前提
+- 使用者明確要求交叉驗證
+- 個案數字看起來不合理，需要外部錨點
 
-## 3. Source Priority
+## 3. 來源優先順序
 
-Use this order where possible:
-1. official regulations, regulator databases, court or agency publications
-2. company annual reports, investor presentations, earnings calls
-3. peer public filings
-4. primary industry associations or official statistical releases
-5. credible research houses only when primary sources do not cover the issue
+可行時依這個優先順序找來源：
+1. 官方法規、主管機關資料庫、法院或政府機關出版品
+2. 公司年報、投資人簡報、法說會內容
+3. 同業公開申報或揭露文件
+4. 主要產業協會或官方統計發布
+5. 只有在前述資料不足時，才使用可信研究機構報告
 
-## 4. Reporting Rule
+## 4. 報告規則
 
-Separate findings into:
+將驗證結果分成：
 - `個案內已驗證`
 - `外部交叉支持`
 - `仍有疑點`
 
-If verification is impossible, say exactly why:
-- exhibit missing
-- scan quality too poor
-- current external source unavailable
-- case period too old for direct comparison
+如果無法驗證，要直接說明原因：
+- 缺少關鍵附表或附錄
+- 掃描品質過差，無法可靠辨識
+- 目前拿不到對應外部來源
+- 個案期間過舊，無法直接對比
