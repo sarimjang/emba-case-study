@@ -135,7 +135,19 @@ For each option, answer:
 
 Prefer 2-4 mutually distinct options. Include a recommended path only if the user asks, or if the task clearly calls for a point of view.
 
-### 7. Offer output format and route to the right skill
+### 7. Produce the canonical case spec first
+
+Before any file export, normalize the analysis into one canonical `case_spec.json`.
+
+This spec is the single source of truth for:
+- `md`
+- `docx`
+- `pptx`
+
+Use `scripts/examples/case_spec.sample.json` as the contract.
+Do not maintain separate content specs for different output formats.
+
+### 8. Offer output format and route to the right skill
 
 Before final delivery, ask the user which output they want:
 - inline chat answer only
@@ -144,17 +156,17 @@ Before final delivery, ask the user which output they want:
 - `pptx`
 
 Routing rules:
-- `md`: write the structured markdown directly unless the user wants a special markdown workflow
+- `md`: prefer `scripts/generate_case_md.py` from the canonical case spec when a file is requested
 - `docx`: use a document-oriented skill or tool if available
 - `pptx`: use a presentation-oriented skill or tool if available
 
 For repo-local exports from already-structured case findings:
 - prefer `scripts/generate_case_pptx.py` for `pptx` when the session has `python-pptx`
 - prefer `scripts/generate_case_docx.py` for `docx` when the session has `python-docx`
+- prefer `scripts/generate_case_md.py` for `md` file export
 
 Use the schema examples before composing new export specs:
-- `scripts/examples/case_deck_spec.sample.json`
-- `scripts/examples/case_report_spec.sample.json`
+- `scripts/examples/case_spec.sample.json`
 
 If the user asks for `docx` or `pptx` and this session does not have a suitable skill or tool:
 - stop before fabricating the file

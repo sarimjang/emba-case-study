@@ -1,0 +1,119 @@
+{
+  "case": {
+    "title": "Sample Case Analysis",
+    "subtitle": "EMBA 個案分析統一 JSON Spec 範例",
+    "language": "zh-TW",
+    "metadata": [
+      "course: strategy",
+      "source_type: pdf",
+      "output_mode: canonical-spec"
+    ],
+    "source_notes": [
+      "PDF p.1-2",
+      "Exhibit 7",
+      "Management interview notes"
+    ]
+  },
+  "decision_pivot": {
+    "decision_owner": "CEO / General Manager",
+    "decision_question": "主角是否應在期限前採用方案 A 或方案 B，以回應競爭與現金流壓力？",
+    "urgency": "若延後決策，將錯失市場窗口並擴大組織與財務成本。",
+    "delay_cost": "競爭者先行卡位、通路關係弱化、內部投入沉沒。",
+    "milestones": [
+      "T-3：公司完成初步市場驗證。",
+      "T-2：競爭者與合作夥伴開始施壓。",
+      "T-1：上市、董事會或預算節點逼近。",
+      "T0：主角必須做出最終選擇。"
+    ]
+  },
+  "company_industry_context": {
+    "company_background": [
+      "公司歷史、商業模式與關鍵能力。",
+      "既有獲利邏輯與主要資源來源。"
+    ],
+    "industry_background": [
+      "市場規模、成長性與競爭密度。",
+      "法規、技術或通路限制。"
+    ],
+    "structural_breakdown": {
+      "market_channel": [
+        "需求轉變、通路權力、客群差異。"
+      ],
+      "cost_supply_chain": [
+        "成本結構、供應風險、產能瓶頸。"
+      ],
+      "technology_organization": [
+        "技術門檻、協作問題、文化衝突。"
+      ]
+    }
+  },
+  "core_dilemma": {
+    "surface_problem": "表層看到的經營症狀或上市問題。",
+    "root_problem": "真正的大問題是平台治理、能力缺口，或資源配置錯誤。",
+    "five_whys": [
+      "Why 1：為何表層問題出現？",
+      "Why 2：為何第一層原因持續？",
+      "Why 3：有哪些制度或能力因素？",
+      "Why 4：組織或策略假設哪裡出錯？",
+      "Why 5：最底層的管理矛盾是什麼？"
+    ],
+    "trade_offs": [
+      "短期獲利 vs 長期轉型",
+      "速度 vs 控制",
+      "滲透率 vs 現金流"
+    ],
+    "key_tension": "用一句話總結這個個案真正不能兩全的矛盾。"
+  },
+  "evidence": {
+    "quantitative_signals": [
+      "市場研究、價格測試、銷量預估或成本資料。",
+      "能支撐決策的 3-5 個關鍵數字。"
+    ],
+    "internal_checks": [
+      "重要數字是否可重算。",
+      "敘事是否跟數字一致。"
+    ],
+    "external_checks": [
+      "同業、法規或官方資料是否支持這個判斷。"
+    ],
+    "open_issues": [
+      "仍缺哪些證據，會限制結論強度。"
+    ]
+  },
+  "options": [
+    {
+      "title": "選項一",
+      "how": "具體怎麼做。",
+      "why": "理論、數據或市場邏輯支持。",
+      "trade_off": "代價、風險、組織阻力。"
+    },
+    {
+      "title": "選項二",
+      "how": "另一條路徑怎麼做。",
+      "why": "它為什麼仍然合理。",
+      "trade_off": "需要容忍什麼。"
+    }
+  ],
+  "recommendation": {
+    "recommended_option": "選項一",
+    "reason": "如果需要表態，這裡放一句最終建議與理由。",
+    "conditions": [
+      "建議成立的前提一。",
+      "建議成立的前提二。"
+    ]
+  },
+  "appendix": {
+    "references": [
+      "資料來源一",
+      "資料來源二"
+    ],
+    "assumptions": [
+      "分析假設一",
+      "分析假設二"
+    ],
+    "discussion_questions": [
+      "還有什麼替代方案未被充分討論？",
+      "若情境改變，原建議是否仍成立？"
+    ]
+  }
+}

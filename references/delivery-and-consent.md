@@ -50,7 +50,7 @@ During execution, keep the user updated on:
 
 ### Markdown
 
-If the user wants `md`, produce structured markdown directly.
+If the user wants `md`, prefer `scripts/generate_case_md.py` from the canonical `case_spec.json`.
 
 ### DOCX
 
@@ -75,3 +75,8 @@ If the requested format is unsupported, respond with:
 - the missing capability
 - the safest alternative you can do now
 - a Google search query for the Anthropic skill repo
+
+## 6. Canonical spec rule
+
+Before exporting any file format, produce one canonical `case_spec.json`.
+All renderers should consume that same spec rather than maintaining per-format content specs.

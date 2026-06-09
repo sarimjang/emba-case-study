@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a reusable EMBA-style case analysis DOCX from structured JSON."""
+"""Generate DOCX from the canonical case spec."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Any
 
 from docx import Document
-from docx.enum.section import WD_SECTION_START
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -35,22 +34,20 @@ def set_cell_shading(cell, fill: str) -> None:
     tc_pr.append(shd)
 
 
-def set_doc_defaults(doc: Document) -> None:
+def set_defaults(doc: Document) -> None:
     section = doc.sections[0]
     section.top_margin = Inches(0.7)
     section.bottom_margin = Inches(0.7)
     section.left_margin = Inches(0.8)
     section.right_margin = Inches(0.8)
-
-    styles = doc.styles
-    normal = styles["Normal"]
-    normal.font.name = FONT
-    normal._element.rPr.rFonts.set(qn("w:eastAsia"), FONT)
-    normal.font.size = Pt(11)
-    normal.font.color.rgb = TEXT_COLOR
+    style = doc.styles["Normal"]
+    style.font.name = FONT
+    style._element.rPr.rFonts.set(qn("w:eastAsia"), FONT)
+    style.font.size = Pt(11)
+    style.font.color.rgb = TEXT_COLOR
 
 
-def add_run_font(run, size: int, *, bold: bool = False, color: RGBColor | None = None) -> None:
+def style_run(run, size: int, *, bold: bool = False, color: RGBColor | None = None) -> None:
     run.font.name = FONT
     run._element.rPr.rFonts.set(qn("w:eastAsia"), FONT)
     run.font.size = Pt(size)
@@ -59,128 +56,152 @@ def add_run_font(run, size: int, *, bold: bool = False, color: RGBColor | None =
         run.font.color.rgb = color
 
 
-def add_title_block(doc: Document, spec: dict[str, Any]) -> None:
-    title = doc.add_paragraph()
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = title.add_run(spec["title"])
-    add_run_font(r, 20, bold=True, color=TITLE_COLOR)
-
-    subtitle = spec.get("subtitle")
-    if subtitle:
-        p = doc.add_paragraph()
+def add_heading(doc: Document, text: str, size: int, color: RGBColor, *, center: bool = False) -> None:
+    p = doc.add_paragraph()
+    if center:
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        r = p.add_run(subtitle)
-        add_run_font(r, 11, color=MUTED_COLOR)
-
-    if spec.get("metadata"):
-        meta = doc.add_paragraph()
-        meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        for idx, item in enumerate(spec["metadata"]):
-            if idx:
-                sep = meta.add_run(" | ")
-                add_run_font(sep, 9, color=MUTED_COLOR)
-            r = meta.add_run(item)
-            add_run_font(r, 9, color=MUTED_COLOR)
+    r = p.add_run(text)
+    style_run(r, size, bold=True, color=color)
 
 
-def add_bullets(doc: Document, items: list[str], *, level: int = 0) -> None:
+def add_paragraph(doc: Document, text: str, *, size: int = 11, color: RGBColor | None = None) -> None:
+    p = doc.add_paragraph()
+    r = p.add_run(text)
+    style_run(r, size, color=color or TEXT_COLOR)
+
+
+def add_bullets(doc: Document, items: list[str]) -> None:
     for item in items:
         p = doc.add_paragraph(style="List Bullet")
-        if level:
-            p.paragraph_format.left_indent = Inches(0.25 * level)
         r = p.add_run(item)
-        add_run_font(r, 11)
+        style_run(r, 11)
 
 
-def add_numbered(doc: Document, items: list[str]) -> None:
-    for item in items:
-        p = doc.add_paragraph(style="List Number")
-        r = p.add_run(item)
-        add_run_font(r, 11)
-
-
-def add_table(doc: Document, table_spec: dict[str, Any]) -> None:
-    headers = table_spec["headers"]
-    rows = table_spec["rows"]
+def add_table(doc: Document, headers: list[str], rows: list[list[str]]) -> None:
     table = doc.add_table(rows=len(rows) + 1, cols=len(headers))
     table.style = "Table Grid"
-    table.autofit = True
-
     for idx, header in enumerate(headers):
         cell = table.cell(0, idx)
         cell.text = ""
         p = cell.paragraphs[0]
         r = p.add_run(header)
-        add_run_font(r, 10, bold=True, color=RGBColor(255, 255, 255))
+        style_run(r, 10, bold=True, color=RGBColor(255, 255, 255))
         set_cell_shading(cell, "315BA3")
-
-    fills = ("FFFFFF", "F6F8FB")
     for row_idx, row in enumerate(rows, start=1):
         for col_idx, value in enumerate(row):
             cell = table.cell(row_idx, col_idx)
             cell.text = ""
             p = cell.paragraphs[0]
             r = p.add_run(str(value))
-            add_run_font(r, 10)
-            set_cell_shading(cell, fills[row_idx % 2])
-
-
-def add_callout(doc: Document, title: str, bullets: list[str]) -> None:
-    p = doc.add_paragraph()
-    r = p.add_run(title)
-    add_run_font(r, 12, bold=True, color=HEADING_COLOR)
-    add_bullets(doc, bullets)
-
-
-def add_section(doc: Document, section_spec: dict[str, Any]) -> None:
-    heading = doc.add_paragraph()
-    r = heading.add_run(section_spec["heading"])
-    add_run_font(r, 15, bold=True, color=HEADING_COLOR)
-
-    if section_spec.get("summary"):
-        p = doc.add_paragraph()
-        r = p.add_run(section_spec["summary"])
-        add_run_font(r, 11)
-
-    for block in section_spec.get("blocks", []):
-        kind = block["kind"]
-        if kind == "paragraph":
-            p = doc.add_paragraph()
-            r = p.add_run(block["text"])
-            add_run_font(r, 11)
-        elif kind == "bullets":
-            add_bullets(doc, block["items"], level=block.get("level", 0))
-        elif kind == "numbered":
-            add_numbered(doc, block["items"])
-        elif kind == "table":
-            add_table(doc, block)
-        elif kind == "callout":
-            add_callout(doc, block["title"], block["bullets"])
-        else:
-            raise ValueError(f"Unsupported DOCX block kind: {kind}")
+            style_run(r, 10)
+            set_cell_shading(cell, "F6F8FB" if row_idx % 2 == 0 else "FFFFFF")
 
 
 def build_document(spec: dict[str, Any]) -> Document:
     doc = Document()
-    set_doc_defaults(doc)
-    add_title_block(doc, spec["document"])
+    set_defaults(doc)
+    case = spec["case"]
+    dp = spec["decision_pivot"]
+    ctx = spec["company_industry_context"]
+    dilemma = spec["core_dilemma"]
+    evidence = spec["evidence"]
+    appendix = spec.get("appendix", {})
+    recommendation = spec.get("recommendation", {})
 
-    for idx, section_spec in enumerate(spec["sections"]):
-        if idx:
-            doc.add_paragraph()
-        add_section(doc, section_spec)
+    add_heading(doc, case["title"], 20, TITLE_COLOR, center=True)
+    if case.get("subtitle"):
+        add_heading(doc, case["subtitle"], 11, MUTED_COLOR, center=True)
+    if case.get("metadata"):
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        for idx, item in enumerate(case["metadata"]):
+            if idx:
+                sep = p.add_run(" | ")
+                style_run(sep, 9, color=MUTED_COLOR)
+            r = p.add_run(item)
+            style_run(r, 9, color=MUTED_COLOR)
 
-    appendix = spec.get("appendix")
-    if appendix:
-        doc.add_section(WD_SECTION_START.CONTINUOUS)
-        add_section(doc, appendix)
+    add_heading(doc, "一、導言與決策切入點", 15, HEADING_COLOR)
+    add_bullets(doc, [
+        f"決策主角：{dp['decision_owner']}",
+        f"核心決策：{dp['decision_question']}",
+        f"緊迫性：{dp['urgency']}",
+        f"延遲代價：{dp['delay_cost']}",
+    ])
+    add_paragraph(doc, "時間軸：")
+    add_bullets(doc, dp.get("milestones", []))
+
+    add_heading(doc, "二、公司與產業總體檢", 15, HEADING_COLOR)
+    add_paragraph(doc, "企業背景：")
+    add_bullets(doc, ctx.get("company_background", []))
+    add_paragraph(doc, "產業背景：")
+    add_bullets(doc, ctx.get("industry_background", []))
+    structural = ctx.get("structural_breakdown", {})
+    for label, key in [("市場與通路", "market_channel"), ("成本與供應鏈", "cost_supply_chain"), ("技術與組織", "technology_organization")]:
+        if structural.get(key):
+            add_paragraph(doc, f"{label}：")
+            add_bullets(doc, structural[key])
+
+    add_heading(doc, "三、核心衝突與根本問題診斷", 15, HEADING_COLOR)
+    add_bullets(doc, [
+        f"表層問題：{dilemma['surface_problem']}",
+        f"根本問題：{dilemma['root_problem']}",
+        f"核心張力：{dilemma['key_tension']}",
+    ])
+    add_paragraph(doc, "5 Whys：")
+    add_bullets(doc, dilemma.get("five_whys", []))
+    add_paragraph(doc, "Trade-off：")
+    add_bullets(doc, dilemma.get("trade_offs", []))
+
+    add_heading(doc, "四、數據驗證與實例支持", 15, HEADING_COLOR)
+    add_paragraph(doc, "關鍵數據：")
+    add_bullets(doc, evidence.get("quantitative_signals", []))
+    add_paragraph(doc, "內部檢查：")
+    add_bullets(doc, evidence.get("internal_checks", []))
+    add_paragraph(doc, "外部交叉檢查：")
+    add_bullets(doc, evidence.get("external_checks", []))
+    if evidence.get("open_issues"):
+        add_paragraph(doc, "仍有疑點：")
+        add_bullets(doc, evidence["open_issues"])
+
+    add_heading(doc, "五、課堂思辨與行動決策", 15, HEADING_COLOR)
+    for option in spec["options"]:
+        add_paragraph(doc, option["title"], size=12, color=HEADING_COLOR)
+        add_bullets(doc, [
+            f"How：{option['how']}",
+            f"Why：{option['why']}",
+            f"Trade-off：{option['trade_off']}",
+        ])
+    if recommendation:
+        add_paragraph(doc, "建議方案", size=12, color=HEADING_COLOR)
+        add_bullets(doc, [
+            f"建議：{recommendation.get('recommended_option', '')}",
+            f"理由：{recommendation.get('reason', '')}",
+        ])
+        if recommendation.get("conditions"):
+            add_paragraph(doc, "成立前提：")
+            add_bullets(doc, recommendation["conditions"])
+
+    add_heading(doc, "附錄與參考資料", 15, HEADING_COLOR)
+    if appendix.get("references"):
+        add_paragraph(doc, "參考來源：")
+        add_bullets(doc, appendix["references"])
+    if appendix.get("assumptions"):
+        add_paragraph(doc, "關鍵假設：")
+        add_bullets(doc, appendix["assumptions"])
+    if appendix.get("discussion_questions"):
+        add_paragraph(doc, "課堂討論題：")
+        add_bullets(doc, appendix["discussion_questions"])
+    if case.get("source_notes"):
+        add_paragraph(doc, "Source Notes：")
+        add_bullets(doc, case["source_notes"])
 
     return doc
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate a reusable EMBA-style case-analysis DOCX from JSON.")
-    parser.add_argument("spec", type=Path, help="Path to document specification JSON file.")
+    parser = argparse.ArgumentParser(description="Generate DOCX from the canonical case spec.")
+    parser.add_argument("spec", type=Path, help="Path to canonical case spec JSON.")
     parser.add_argument("output", type=Path, help="Path to output .docx file.")
     return parser.parse_args()
 
