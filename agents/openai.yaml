@@ -1,0 +1,4 @@
+interface:
+  display_name: "EMBA Case Study"
+  short_description: "Analyze case files into decision-ready EMBA briefs."
+  default_prompt: "Use $emba-case-study to analyze this case document and turn it into a decision-ready EMBA case brief."
