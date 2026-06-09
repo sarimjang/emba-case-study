@@ -1,0 +1,78 @@
+{
+  "document": {
+    "title": "Sample Case Analysis Report",
+    "subtitle": "EMBA 個案分析文件範例",
+    "metadata": [
+      "Course: Strategy",
+      "Language: zh-TW",
+      "Format: DOCX"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "一、導言與決策切入點",
+      "summary": "用 2-3 句話說明主角、時間點與為何現在必須決策。",
+      "blocks": [
+        {
+          "kind": "bullets",
+          "items": [
+            "主角是誰，負責什麼決策。",
+            "關鍵觸發事件是什麼。",
+            "拖延的代價是什麼。"
+          ]
+        },
+        {
+          "kind": "callout",
+          "title": "建議句型",
+          "bullets": [
+            "主角必須在 {期限} 前決定是否 {核心行動}，否則 {主要代價}。"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "二、公司與產業總體檢",
+      "blocks": [
+        {
+          "kind": "table",
+          "headers": ["面向", "重點"],
+          "rows": [
+            ["公司基礎", "歷史、商業模式、能力基礎"],
+            ["市場機會", "市場規模、成長、客群特徵"],
+            ["競爭環境", "對手、價格帶、通路特性"]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "表格後可以補一段整合判讀，說明公司優勢與外部限制如何交互作用。"
+        }
+      ]
+    },
+    {
+      "heading": "三、核心衝突與根本問題診斷",
+      "blocks": [
+        {
+          "kind": "numbered",
+          "items": [
+            "先寫表層問題。",
+            "再追根因與 trade-off。",
+            "最後用一句話濃縮真正的管理兩難。"
+          ]
+        }
+      ]
+    }
+  ],
+  "appendix": {
+    "heading": "附錄與參考資料",
+    "blocks": [
+      {
+        "kind": "bullets",
+        "items": [
+          "資料來源一",
+          "資料來源二",
+          "待補證據清單"
+        ]
+      }
+    ]
+  }
+}

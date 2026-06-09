@@ -148,8 +148,13 @@ Routing rules:
 - `docx`: use a document-oriented skill or tool if available
 - `pptx`: use a presentation-oriented skill or tool if available
 
-For repo-local PPTX generation from already-structured case findings, prefer `scripts/generate_case_pptx.py` when the session has `python-pptx`.
-Use `scripts/examples/case_deck_spec.sample.json` as the schema example before composing a new case deck spec.
+For repo-local exports from already-structured case findings:
+- prefer `scripts/generate_case_pptx.py` for `pptx` when the session has `python-pptx`
+- prefer `scripts/generate_case_docx.py` for `docx` when the session has `python-docx`
+
+Use the schema examples before composing new export specs:
+- `scripts/examples/case_deck_spec.sample.json`
+- `scripts/examples/case_report_spec.sample.json`
 
 If the user asks for `docx` or `pptx` and this session does not have a suitable skill or tool:
 - stop before fabricating the file

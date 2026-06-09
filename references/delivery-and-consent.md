@@ -55,14 +55,16 @@ If the user wants `md`, produce structured markdown directly.
 ### DOCX
 
 Use a document skill or tool only if the session actually has one.
-If none is available, stop and provide:
+For repo-local structured export, prefer `scripts/generate_case_docx.py`.
+If no suitable capability is available, stop and provide:
 
 `site:github.com anthropic skill docx codex`
 
 ### PPTX
 
 Use a presentation skill or tool only if the session actually has one.
-If none is available, stop and provide:
+For repo-local structured export, prefer `scripts/generate_case_pptx.py`.
+If no suitable capability is available, stop and provide:
 
 `site:github.com anthropic skill pptx codex`
 
