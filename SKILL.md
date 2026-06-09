@@ -20,6 +20,25 @@ Turn raw case materials into a decision-ready analysis that:
 
 ## Workflow
 
+### 0. Detect capabilities and ask before committing
+
+Before doing substantial work, detect what this session can actually use:
+- source-reading tools for `pdf`, `pptx`, `docx`, `md`, `txt`
+- browsing or external research capability
+- output-generation skills for `docx`, `pptx`, or `md`
+
+Start with a short capability brief to the user:
+- what you found
+- the safest recommended path
+- optional higher-effort paths such as OCR, external cross-verification, or file export
+
+Then ask for the user's consent before continuing whenever the next step changes effort, scope, or output shape in a meaningful way:
+- OCR on a scanned file
+- external browsing or market/regulatory cross-checking
+- generating deliverables such as `docx` or `pptx`
+
+Use the checkpoint pattern in `references/delivery-and-consent.md`.
+
 ### 1. Ingest the source by format
 
 Pick the lightest extraction path that preserves evidence:
@@ -37,6 +56,11 @@ Fallback order when those tools are unavailable:
 1. use any host-provided document connector or parser that can expose quoted text or slide/page anchors
 2. if only partial extraction is possible, continue with the readable sections and mark the blind spots explicitly
 3. if the file cannot be read with enough fidelity for evidence-based analysis, stop and report the minimum missing capability instead of pretending to understand the case
+
+While ingesting, keep the user informed with short progress notes:
+- whether the file has a text layer or requires OCR
+- whether exhibits appear machine-readable or only image-readable
+- whether the current evidence is already enough for a draft analysis
 
 Do not start analysis until the source is readable enough to quote or cite specific evidence.
 
@@ -98,6 +122,8 @@ Check externally when the user asks for cross-verification or when live context 
 
 Use `references/evidence-and-verification.md` for the validation checklist.
 
+Before doing that external step, tell the user what you plan to verify and ask if they want that broader pass.
+
 ### 6. Synthesize action options
 
 End with decision-ready options, not generic advice.
@@ -108,6 +134,32 @@ For each option, answer:
 - `Trade-off`: what cost, risk, or sacrifice comes with it
 
 Prefer 2-4 mutually distinct options. Include a recommended path only if the user asks, or if the task clearly calls for a point of view.
+
+### 7. Offer output format and route to the right skill
+
+Before final delivery, ask the user which output they want:
+- inline chat answer only
+- `md`
+- `docx`
+- `pptx`
+
+Routing rules:
+- `md`: write the structured markdown directly unless the user wants a special markdown workflow
+- `docx`: use a document-oriented skill or tool if available
+- `pptx`: use a presentation-oriented skill or tool if available
+
+For repo-local PPTX generation from already-structured case findings, prefer `scripts/generate_case_pptx.py` when the session has `python-pptx`.
+Use `scripts/examples/case_deck_spec.sample.json` as the schema example before composing a new case deck spec.
+
+If the user asks for `docx` or `pptx` and this session does not have a suitable skill or tool:
+- stop before fabricating the file
+- say which capability is missing
+- provide a Google query the user can use to search the Anthropic skill repo
+
+Default search queries:
+- `site:github.com anthropic skill docx codex`
+- `site:github.com anthropic skill pptx codex`
+- `site:github.com anthropic skills presentation document generation`
 
 ## Output Contract
 
@@ -139,6 +191,14 @@ Use external sources only when they improve correctness:
 
 When researching, prefer primary or official sources first. Keep the case itself as the base narrative unless external evidence disproves it or adds necessary context.
 
+## Interaction Rules
+
+- Recommend a method before acting when there are multiple viable paths.
+- Ask for consent before OCR, external browsing, or export generation.
+- Give short, concrete progress updates during extraction and validation.
+- If the user declines a higher-effort step, continue with the best lower-effort path and state the limitation.
+- If a requested export format is unsupported in the current session, stop cleanly and give the Anthropic skill repo search keywords instead of improvising.
+
 ## Good Practice
 
 - Rebuild the timeline before diagnosing blame
@@ -158,5 +218,6 @@ Avoid these mistakes:
 ## Reference Files
 
 - `references/analysis-template.md`: default section structure and prompting scaffolds
+- `references/delivery-and-consent.md`: capability detection, consent checkpoints, and export routing
 - `references/decision-pivot-checklist.md`: timeline, urgency, and protagonist framing
 - `references/evidence-and-verification.md`: internal exhibit checks and external validation rules

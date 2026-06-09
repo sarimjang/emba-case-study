@@ -1,1 +1,5 @@
 .omx/
+.DS_Store
+__pycache__/
+*.pptx
+*.spec.json

@@ -1,0 +1,178 @@
+{
+  "deck": {
+    "title": "Sample Case Analysis Deck",
+    "default_footer": "Generated from sample case deck spec"
+  },
+  "slides": [
+    {
+      "kind": "title",
+      "title": "Case Analysis Title",
+      "subtitle_lines": [
+        "核心問題：用一句話說清楚決策兩難",
+        "副標：資料來源、分析邊界、或課堂脈絡"
+      ],
+      "hero_cards": [
+        {
+          "title": "決策時點",
+          "bullets": [
+            "主角是誰",
+            "何時必須定案"
+          ],
+          "accent": "blue"
+        },
+        {
+          "title": "真正張力",
+          "bullets": [
+            "短期 vs 長期",
+            "速度 vs 控制"
+          ],
+          "accent": "teal"
+        },
+        {
+          "title": "初步主張",
+          "bullets": [
+            "一句管理建議",
+            "一句定價或路徑建議"
+          ],
+          "accent": "gold"
+        }
+      ]
+    },
+    {
+      "kind": "cards",
+      "title": "公司與產業脈絡",
+      "subtitle": "三張卡片版本",
+      "background": "white",
+      "cards": [
+        {
+          "title": "公司基礎",
+          "bullets": [
+            "歷史、商業模式、能力基礎"
+          ],
+          "accent": "blue"
+        },
+        {
+          "title": "市場機會",
+          "bullets": [
+            "市場規模、成長、客群特徵"
+          ],
+          "accent": "teal"
+        },
+        {
+          "title": "競爭環境",
+          "bullets": [
+            "主要對手、價格帶、通路特性"
+          ],
+          "accent": "red"
+        }
+      ]
+    },
+    {
+      "kind": "table",
+      "title": "核心 trade-off",
+      "subtitle": "適合比較兩到三個策略分支",
+      "table": {
+        "headers": [
+          "面向",
+          "選項 A",
+          "選項 B"
+        ],
+        "rows": [
+          [
+            "上市速度",
+            "較快",
+            "較慢"
+          ],
+          [
+            "控制力",
+            "較弱",
+            "較強"
+          ]
+        ],
+        "accent": "navy"
+      },
+      "insights": [
+        "可在表格下方放 1-3 句重點判讀。"
+      ]
+    },
+    {
+      "kind": "chart",
+      "title": "數據驗證",
+      "subtitle": "適合放價格、佔比、成長率等單一主圖",
+      "chart": {
+        "categories": [
+          "A",
+          "B",
+          "C"
+        ],
+        "values": [
+          72,
+          55,
+          31
+        ],
+        "series_name": "示意數列",
+        "accent": "teal"
+      },
+      "bullets": [
+        "左側可放 2-4 點關鍵數字解讀。"
+      ],
+      "bottom_cards": [
+        {
+          "title": "解讀",
+          "bullets": [
+            "這張圖真正想證明什麼"
+          ],
+          "accent": "gold"
+        },
+        {
+          "title": "依據",
+          "bullets": [
+            "資料來源或展品編號"
+          ],
+          "accent": "blue"
+        }
+      ]
+    },
+    {
+      "kind": "split",
+      "title": "定價或 economics",
+      "subtitle": "左表右文版本",
+      "left": {
+        "kind": "table",
+        "table": {
+          "headers": [
+            "價格點",
+            "吸引力",
+            "含義"
+          ],
+          "rows": [
+            [
+              "$199",
+              "高",
+              "快速滲透"
+            ],
+            [
+              "$249",
+              "中",
+              "折衷"
+            ]
+          ],
+          "accent": "blue"
+        }
+      },
+      "right": {
+        "kind": "bullets",
+        "items": [
+          "右邊可放單位經濟、現金流或成本壓力說明。"
+        ]
+      },
+      "right_card": {
+        "title": "關鍵判讀",
+        "bullets": [
+          "一句最重要的管理意涵"
+        ],
+        "accent": "red"
+      }
+    }
+  ]
+}
