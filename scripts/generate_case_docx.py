@@ -47,7 +47,9 @@ def set_defaults(doc: Document) -> None:
     style.font.color.rgb = TEXT_COLOR
 
 
-def style_run(run, size: int, *, bold: bool = False, color: RGBColor | None = None) -> None:
+def style_run(
+    run, size: int, *, bold: bool = False, color: RGBColor | None = None
+) -> None:
     run.font.name = FONT
     run._element.rPr.rFonts.set(qn("w:eastAsia"), FONT)
     run.font.size = Pt(size)
@@ -56,7 +58,9 @@ def style_run(run, size: int, *, bold: bool = False, color: RGBColor | None = No
         run.font.color.rgb = color
 
 
-def add_heading(doc: Document, text: str, size: int, color: RGBColor, *, center: bool = False) -> None:
+def add_heading(
+    doc: Document, text: str, size: int, color: RGBColor, *, center: bool = False
+) -> None:
     p = doc.add_paragraph()
     if center:
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -64,7 +68,9 @@ def add_heading(doc: Document, text: str, size: int, color: RGBColor, *, center:
     style_run(r, size, bold=True, color=color)
 
 
-def add_paragraph(doc: Document, text: str, *, size: int = 11, color: RGBColor | None = None) -> None:
+def add_paragraph(
+    doc: Document, text: str, *, size: int = 11, color: RGBColor | None = None
+) -> None:
     p = doc.add_paragraph()
     r = p.add_run(text)
     style_run(r, size, color=color or TEXT_COLOR)
@@ -122,12 +128,15 @@ def build_document(spec: dict[str, Any]) -> Document:
             style_run(r, 9, color=MUTED_COLOR)
 
     add_heading(doc, "一、導言與決策切入點", 15, HEADING_COLOR)
-    add_bullets(doc, [
-        f"決策主角：{dp['decision_owner']}",
-        f"核心決策：{dp['decision_question']}",
-        f"緊迫性：{dp['urgency']}",
-        f"延遲代價：{dp['delay_cost']}",
-    ])
+    add_bullets(
+        doc,
+        [
+            f"決策主角：{dp['decision_owner']}",
+            f"核心決策：{dp['decision_question']}",
+            f"緊迫性：{dp['urgency']}",
+            f"延遲代價：{dp['delay_cost']}",
+        ],
+    )
     add_paragraph(doc, "時間軸：")
     add_bullets(doc, dp.get("milestones", []))
 
@@ -137,17 +146,24 @@ def build_document(spec: dict[str, Any]) -> Document:
     add_paragraph(doc, "產業背景：")
     add_bullets(doc, ctx.get("industry_background", []))
     structural = ctx.get("structural_breakdown", {})
-    for label, key in [("市場與通路", "market_channel"), ("成本與供應鏈", "cost_supply_chain"), ("技術與組織", "technology_organization")]:
+    for label, key in [
+        ("市場與通路", "market_channel"),
+        ("成本與供應鏈", "cost_supply_chain"),
+        ("技術與組織", "technology_organization"),
+    ]:
         if structural.get(key):
             add_paragraph(doc, f"{label}：")
             add_bullets(doc, structural[key])
 
     add_heading(doc, "三、核心衝突與根本問題診斷", 15, HEADING_COLOR)
-    add_bullets(doc, [
-        f"表層問題：{dilemma['surface_problem']}",
-        f"根本問題：{dilemma['root_problem']}",
-        f"核心張力：{dilemma['key_tension']}",
-    ])
+    add_bullets(
+        doc,
+        [
+            f"表層問題：{dilemma['surface_problem']}",
+            f"根本問題：{dilemma['root_problem']}",
+            f"核心張力：{dilemma['key_tension']}",
+        ],
+    )
     add_paragraph(doc, "5 Whys：")
     add_bullets(doc, dilemma.get("five_whys", []))
     add_paragraph(doc, "Trade-off：")
@@ -165,19 +181,25 @@ def build_document(spec: dict[str, Any]) -> Document:
         add_bullets(doc, evidence["open_issues"])
 
     add_heading(doc, "五、課堂思辨與行動決策", 15, HEADING_COLOR)
-    for option in spec["options"]:
+    for option in spec.get("options", []):
         add_paragraph(doc, option["title"], size=12, color=HEADING_COLOR)
-        add_bullets(doc, [
-            f"How：{option['how']}",
-            f"Why：{option['why']}",
-            f"Trade-off：{option['trade_off']}",
-        ])
+        add_bullets(
+            doc,
+            [
+                f"How：{option['how']}",
+                f"Why：{option['why']}",
+                f"Trade-off：{option['trade_off']}",
+            ],
+        )
     if recommendation:
         add_paragraph(doc, "建議方案", size=12, color=HEADING_COLOR)
-        add_bullets(doc, [
-            f"建議：{recommendation.get('recommended_option', '')}",
-            f"理由：{recommendation.get('reason', '')}",
-        ])
+        add_bullets(
+            doc,
+            [
+                f"建議：{recommendation.get('recommended_option', '')}",
+                f"理由：{recommendation.get('reason', '')}",
+            ],
+        )
         if recommendation.get("conditions"):
             add_paragraph(doc, "成立前提：")
             add_bullets(doc, recommendation["conditions"])
@@ -200,7 +222,9 @@ def build_document(spec: dict[str, Any]) -> Document:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate DOCX from the canonical case spec.")
+    parser = argparse.ArgumentParser(
+        description="Generate DOCX from the canonical case spec."
+    )
     parser.add_argument("spec", type=Path, help="Path to canonical case spec JSON.")
     parser.add_argument("output", type=Path, help="Path to output .docx file.")
     return parser.parse_args()

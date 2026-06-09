@@ -58,7 +58,9 @@ class DeckBuilder:
         return COLORS.get(name, COLORS[fallback])
 
     def add_bg(self, slide, color_name: str = "bg") -> None:
-        shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height)
+        shape = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, self.prs.slide_height
+        )
         shape.fill.solid()
         shape.fill.fore_color.rgb = self.color(color_name, "bg")
         shape.line.fill.background()
@@ -66,7 +68,9 @@ class DeckBuilder:
         slide.shapes._spTree.insert(2, shape._element)
 
     def add_header(self, slide, title: str, subtitle: str | None = None) -> None:
-        title_box = slide.shapes.add_textbox(Inches(0.55), Inches(0.35), Inches(10.8), Inches(0.7))
+        title_box = slide.shapes.add_textbox(
+            Inches(0.55), Inches(0.35), Inches(10.8), Inches(0.7)
+        )
         p = title_box.text_frame.paragraphs[0]
         r = p.add_run()
         r.text = title
@@ -75,7 +79,9 @@ class DeckBuilder:
         r.font.bold = True
         r.font.color.rgb = COLORS["navy"]
         if subtitle:
-            sub_box = slide.shapes.add_textbox(Inches(0.58), Inches(0.96), Inches(11.3), Inches(0.45))
+            sub_box = slide.shapes.add_textbox(
+                Inches(0.58), Inches(0.96), Inches(11.3), Inches(0.45)
+            )
             p = sub_box.text_frame.paragraphs[0]
             r = p.add_run()
             r.text = subtitle
@@ -85,7 +91,9 @@ class DeckBuilder:
 
     def add_footer(self, slide, text: str | None = None) -> None:
         footer_text = text or "Generated from canonical case spec"
-        box = slide.shapes.add_textbox(Inches(0.55), Inches(7.0), Inches(12.1), Inches(0.25))
+        box = slide.shapes.add_textbox(
+            Inches(0.55), Inches(7.0), Inches(12.1), Inches(0.25)
+        )
         p = box.text_frame.paragraphs[0]
         p.alignment = PP_ALIGN.RIGHT
         r = p.add_run()
@@ -94,7 +102,9 @@ class DeckBuilder:
         r.font.size = Pt(8.5)
         r.font.color.rgb = COLORS["muted"]
 
-    def add_bullets(self, slide, items: list[str], x, y, w, h, *, size: int = 14, color: str = "ink") -> None:
+    def add_bullets(
+        self, slide, items: list[str], x, y, w, h, *, size: int = 14, color: str = "ink"
+    ) -> None:
         box = slide.shapes.add_textbox(x, y, w, h)
         tf = box.text_frame
         tf.word_wrap = True
@@ -110,7 +120,9 @@ class DeckBuilder:
             r.font.size = Pt(size)
             r.font.color.rgb = self.color(color, "ink")
 
-    def add_card(self, slide, title: str, bullets: list[str], accent: str, x, y, w, h) -> None:
+    def add_card(
+        self, slide, title: str, bullets: list[str], accent: str, x, y, w, h
+    ) -> None:
         shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, w, h)
         shape.fill.solid()
         shape.fill.fore_color.rgb = COLORS["white"]
@@ -119,7 +131,9 @@ class DeckBuilder:
         band.fill.solid()
         band.fill.fore_color.rgb = self.color(accent)
         band.line.fill.background()
-        title_box = slide.shapes.add_textbox(x + Inches(0.18), y + Inches(0.15), w - Inches(0.3), Inches(0.35))
+        title_box = slide.shapes.add_textbox(
+            x + Inches(0.18), y + Inches(0.15), w - Inches(0.3), Inches(0.35)
+        )
         p = title_box.text_frame.paragraphs[0]
         r = p.add_run()
         r.text = title
@@ -127,9 +141,28 @@ class DeckBuilder:
         r.font.size = Pt(14)
         r.font.bold = True
         r.font.color.rgb = COLORS["navy"]
-        self.add_bullets(slide, bullets, x + Inches(0.18), y + Inches(0.55), w - Inches(0.35), h - Inches(0.7), size=12)
+        self.add_bullets(
+            slide,
+            bullets,
+            x + Inches(0.18),
+            y + Inches(0.55),
+            w - Inches(0.35),
+            h - Inches(0.7),
+            size=12,
+        )
 
-    def add_table(self, slide, headers: list[str], rows: list[list[str]], x, y, w, h, *, accent: str = "navy") -> None:
+    def add_table(
+        self,
+        slide,
+        headers: list[str],
+        rows: list[list[str]],
+        x,
+        y,
+        w,
+        h,
+        *,
+        accent: str = "navy",
+    ) -> None:
         table = slide.shapes.add_table(len(rows) + 1, len(headers), x, y, w, h).table
         for c, header in enumerate(headers):
             cell = table.cell(0, c)
@@ -147,22 +180,26 @@ class DeckBuilder:
                 cell = table.cell(r_idx, c_idx)
                 cell.text = val
                 cell.fill.solid()
-                cell.fill.fore_color.rgb = COLORS["white"] if r_idx % 2 else COLORS["bg"]
+                cell.fill.fore_color.rgb = (
+                    COLORS["white"] if r_idx % 2 else COLORS["bg"]
+                )
                 for p in cell.text_frame.paragraphs:
                     for run in p.runs:
                         run.font.name = FONT
                         run.font.size = Pt(10.5)
                         run.font.color.rgb = COLORS["ink"]
 
-    def add_bar_chart(self, slide, categories: list[str], values: list[float], x, y, w, h) -> None:
+    def add_bar_chart(
+        self, slide, categories: list[str], values: list[float], unit: str, x, y, w, h
+    ) -> None:
         data = CategoryChartData()
         data.categories = categories
         data.add_series("Value", tuple(values))
-        chart = slide.shapes.add_chart(XL_CHART_TYPE.BAR_CLUSTERED, x, y, w, h, data).chart
+        chart = slide.shapes.add_chart(
+            XL_CHART_TYPE.BAR_CLUSTERED, x, y, w, h, data
+        ).chart
         chart.has_legend = False
-        chart.value_axis.maximum_scale = 100
-        chart.value_axis.minimum_scale = 0
-        chart.value_axis.tick_labels.number_format = '0"%"'
+        chart.value_axis.tick_labels.number_format = f'0"{unit}"' if unit else "0"
         chart.category_axis.tick_labels.font.size = Pt(11)
         chart.value_axis.tick_labels.font.size = Pt(10)
         chart.series[0].format.fill.solid()
@@ -180,11 +217,15 @@ class DeckBuilder:
 
         slide = self.prs.slides.add_slide(self.layout)
         self.add_bg(slide, "bg")
-        banner = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.25))
+        banner = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE, 0, 0, self.prs.slide_width, Inches(1.25)
+        )
         banner.fill.solid()
         banner.fill.fore_color.rgb = COLORS["navy"]
         banner.line.fill.background()
-        title_box = slide.shapes.add_textbox(Inches(0.6), Inches(0.32), Inches(11.8), Inches(0.55))
+        title_box = slide.shapes.add_textbox(
+            Inches(0.6), Inches(0.32), Inches(11.8), Inches(0.55)
+        )
         p = title_box.text_frame.paragraphs[0]
         r = p.add_run()
         r.text = case["title"]
@@ -195,7 +236,9 @@ class DeckBuilder:
         subtitle_lines = [dp["decision_question"]]
         if case.get("subtitle"):
             subtitle_lines.append(case["subtitle"])
-        sub = slide.shapes.add_textbox(Inches(0.62), Inches(1.55), Inches(10.8), Inches(1.2))
+        sub = slide.shapes.add_textbox(
+            Inches(0.62), Inches(1.55), Inches(10.8), Inches(1.2)
+        )
         tf = sub.text_frame
         for idx, line in enumerate(subtitle_lines):
             p = tf.paragraphs[0] if idx == 0 else tf.add_paragraph()
@@ -206,20 +249,60 @@ class DeckBuilder:
             r.font.color.rgb = COLORS["ink"] if idx == 0 else COLORS["muted"]
         hero_cards = [
             ("決策時點", [dp["decision_owner"], dp["urgency"]], "blue"),
-            ("真正張力", dilemma.get("trade_offs", [])[:2] or [dilemma["key_tension"]], "teal"),
-            ("建議主張", [recommendation.get("recommended_option", "待決定"), recommendation.get("reason", "先整理 options 再表態")], "gold"),
+            (
+                "真正張力",
+                dilemma.get("trade_offs", [])[:2] or [dilemma["key_tension"]],
+                "teal",
+            ),
+            (
+                "建議主張",
+                [
+                    recommendation.get("recommended_option", "待決定"),
+                    recommendation.get("reason", "先整理 options 再表態"),
+                ],
+                "gold",
+            ),
         ]
         xs = [Inches(0.62), Inches(4.45), Inches(8.28)]
-        for (title, bullets, accent), x in zip(hero_cards, xs):
-            self.add_card(slide, title, bullets, accent, x, Inches(3.0), Inches(3.2), Inches(2.25))
+        for (title, bullets, accent), x in zip(hero_cards, xs, strict=False):
+            self.add_card(
+                slide, title, bullets, accent, x, Inches(3.0), Inches(3.2), Inches(2.25)
+            )
         self.add_footer(slide, "Generated from canonical case spec")
 
         slide = self.prs.slides.add_slide(self.layout)
         self.add_bg(slide, "bg")
         self.add_header(slide, "1. 導言與決策切入點", "主角、時間軸與延遲代價")
-        self.add_card(slide, "決策主角", [dp["decision_owner"], dp["decision_question"]], "blue", Inches(0.55), Inches(1.45), Inches(4.0), Inches(4.95))
-        self.add_card(slide, "時間軸", dp.get("milestones", []), "teal", Inches(4.75), Inches(1.45), Inches(4.0), Inches(4.95))
-        self.add_card(slide, "延遲代價", [dp["urgency"], dp["delay_cost"]], "red", Inches(8.95), Inches(1.45), Inches(3.85), Inches(4.95))
+        self.add_card(
+            slide,
+            "決策主角",
+            [dp["decision_owner"], dp["decision_question"]],
+            "blue",
+            Inches(0.55),
+            Inches(1.45),
+            Inches(4.0),
+            Inches(4.95),
+        )
+        self.add_card(
+            slide,
+            "時間軸",
+            dp.get("milestones", []),
+            "teal",
+            Inches(4.75),
+            Inches(1.45),
+            Inches(4.0),
+            Inches(4.95),
+        )
+        self.add_card(
+            slide,
+            "延遲代價",
+            [dp["urgency"], dp["delay_cost"]],
+            "red",
+            Inches(8.95),
+            Inches(1.45),
+            Inches(3.85),
+            Inches(4.95),
+        )
         self.add_footer(slide)
 
         slide = self.prs.slides.add_slide(self.layout)
@@ -231,8 +314,17 @@ class DeckBuilder:
             ("結構拆解", sum(ctx.get("structural_breakdown", {}).values(), []), "gold"),
         ]
         xs = [Inches(0.55), Inches(4.75), Inches(8.95)]
-        for (title, bullets, accent), x in zip(cards, xs):
-            self.add_card(slide, title, bullets[:4], accent, x, Inches(1.45), Inches(3.85), Inches(4.85))
+        for (title, bullets, accent), x in zip(cards, xs, strict=False):
+            self.add_card(
+                slide,
+                title,
+                bullets[:4],
+                accent,
+                x,
+                Inches(1.45),
+                Inches(3.85),
+                Inches(4.85),
+            )
         self.add_footer(slide)
 
         slide = self.prs.slides.add_slide(self.layout)
@@ -246,22 +338,99 @@ class DeckBuilder:
                 ["根本問題", dilemma["root_problem"]],
                 ["核心張力", dilemma["key_tension"]],
             ],
-            Inches(0.65), Inches(1.55), Inches(7.1), Inches(2.2),
+            Inches(0.65),
+            Inches(1.55),
+            Inches(7.1),
+            Inches(2.2),
         )
-        self.add_bullets(slide, ["5 Whys"] + dilemma.get("five_whys", []), Inches(8.0), Inches(1.6), Inches(4.3), Inches(2.8), size=13)
-        self.add_card(slide, "Trade-off", dilemma.get("trade_offs", []), "red", Inches(0.75), Inches(4.3), Inches(11.6), Inches(1.9))
+        self.add_bullets(
+            slide,
+            ["5 Whys"] + dilemma.get("five_whys", []),
+            Inches(8.0),
+            Inches(1.6),
+            Inches(4.3),
+            Inches(2.8),
+            size=13,
+        )
+        self.add_card(
+            slide,
+            "Trade-off",
+            dilemma.get("trade_offs", []),
+            "red",
+            Inches(0.75),
+            Inches(4.3),
+            Inches(11.6),
+            Inches(1.9),
+        )
         self.add_footer(slide)
 
         slide = self.prs.slides.add_slide(self.layout)
         self.add_bg(slide, "white")
         self.add_header(slide, "4. 數據驗證與實例支持", "關鍵數據、內部檢查與外部交叉")
-        if evidence.get("quantitative_signals"):
-            values = [max(10, 100 - idx * 15) for idx, _ in enumerate(evidence["quantitative_signals"][:5])]
-            labels = [f"S{idx+1}" for idx, _ in enumerate(values)]
-            self.add_bar_chart(slide, labels, values, Inches(7.0), Inches(1.6), Inches(5.4), Inches(3.2))
-        self.add_bullets(slide, evidence.get("quantitative_signals", []), Inches(0.7), Inches(1.6), Inches(5.8), Inches(2.7), size=14)
-        self.add_card(slide, "內部檢查", evidence.get("internal_checks", []), "gold", Inches(0.75), Inches(4.8), Inches(5.7), Inches(1.7))
-        self.add_card(slide, "外部交叉", evidence.get("external_checks", []), "blue", Inches(6.85), Inches(4.8), Inches(5.6), Inches(1.7))
+        chart_data = evidence.get("chart_data")
+        if chart_data and chart_data.get("labels") and chart_data.get("values"):
+            unit = chart_data.get("unit", "")
+            title = chart_data.get("title", "")
+            if title:
+                title_box = slide.shapes.add_textbox(
+                    Inches(7.0), Inches(1.45), Inches(5.4), Inches(0.3)
+                )
+                p = title_box.text_frame.paragraphs[0]
+                r = p.add_run()
+                r.text = title
+                r.font.name = FONT
+                r.font.size = Pt(11)
+                r.font.bold = True
+                r.font.color.rgb = COLORS["muted"]
+            self.add_bar_chart(
+                slide,
+                chart_data["labels"],
+                chart_data["values"],
+                unit,
+                Inches(7.0),
+                Inches(1.75),
+                Inches(5.4),
+                Inches(3.05),
+            )
+            self.add_bullets(
+                slide,
+                evidence.get("quantitative_signals", []),
+                Inches(0.7),
+                Inches(1.6),
+                Inches(5.8),
+                Inches(2.7),
+                size=14,
+            )
+        else:
+            self.add_bullets(
+                slide,
+                evidence.get("quantitative_signals", []),
+                Inches(0.7),
+                Inches(1.6),
+                Inches(11.6),
+                Inches(2.7),
+                size=14,
+            )
+        self.add_card(
+            slide,
+            "內部檢查",
+            evidence.get("internal_checks", []),
+            "gold",
+            Inches(0.75),
+            Inches(4.8),
+            Inches(5.7),
+            Inches(1.7),
+        )
+        self.add_card(
+            slide,
+            "外部交叉",
+            evidence.get("external_checks", []),
+            "blue",
+            Inches(6.85),
+            Inches(4.8),
+            Inches(5.6),
+            Inches(1.7),
+        )
         self.add_footer(slide)
 
         slide = self.prs.slides.add_slide(self.layout)
@@ -271,24 +440,68 @@ class DeckBuilder:
         gap = Inches(0.2)
         card_w = (Inches(12.2) - gap * (cols - 1)) / cols
         for idx, option in enumerate(options[:3]):
-            bullets = [f"How：{option['how']}", f"Why：{option['why']}", f"Trade-off：{option['trade_off']}"]
-            self.add_card(slide, option["title"], bullets, ["teal", "gold", "blue"][idx % 3], Inches(0.55) + idx * (card_w + gap), Inches(1.45), card_w, Inches(4.8))
+            bullets = [
+                f"How：{option['how']}",
+                f"Why：{option['why']}",
+                f"Trade-off：{option['trade_off']}",
+            ]
+            self.add_card(
+                slide,
+                option["title"],
+                bullets,
+                ["teal", "gold", "blue"][idx % 3],
+                Inches(0.55) + idx * (card_w + gap),
+                Inches(1.45),
+                card_w,
+                Inches(4.8),
+            )
         self.add_footer(slide)
 
         slide = self.prs.slides.add_slide(self.layout)
         self.add_bg(slide, "bg")
         self.add_header(slide, "6. 建議與附錄", "推薦方案、前提與討論題")
-        self.add_card(slide, "推薦方案", [
-            f"建議：{recommendation.get('recommended_option', '未指定')}",
-            f"理由：{recommendation.get('reason', '未指定')}",
-        ] + recommendation.get("conditions", []), "teal", Inches(0.6), Inches(1.45), Inches(4.0), Inches(4.8))
-        self.add_card(slide, "參考與假設", appendix.get("references", [])[:3] + appendix.get("assumptions", [])[:2], "gold", Inches(4.8), Inches(1.45), Inches(3.9), Inches(4.8))
-        self.add_card(slide, "課堂討論題", appendix.get("discussion_questions", [])[:4] + self.case.get("source_notes", [])[:2], "blue", Inches(8.9), Inches(1.45), Inches(3.9), Inches(4.8))
+        self.add_card(
+            slide,
+            "推薦方案",
+            [
+                f"建議：{recommendation.get('recommended_option', '未指定')}",
+                f"理由：{recommendation.get('reason', '未指定')}",
+            ]
+            + recommendation.get("conditions", []),
+            "teal",
+            Inches(0.6),
+            Inches(1.45),
+            Inches(4.0),
+            Inches(4.8),
+        )
+        self.add_card(
+            slide,
+            "參考與假設",
+            appendix.get("references", [])[:3] + appendix.get("assumptions", [])[:2],
+            "gold",
+            Inches(4.8),
+            Inches(1.45),
+            Inches(3.9),
+            Inches(4.8),
+        )
+        self.add_card(
+            slide,
+            "課堂討論題",
+            appendix.get("discussion_questions", [])[:4]
+            + self.case.get("source_notes", [])[:2],
+            "blue",
+            Inches(8.9),
+            Inches(1.45),
+            Inches(3.9),
+            Inches(4.8),
+        )
         self.add_footer(slide)
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate PPTX from the canonical case spec.")
+    parser = argparse.ArgumentParser(
+        description="Generate PPTX from the canonical case spec."
+    )
     parser.add_argument("spec", type=Path, help="Path to canonical case spec JSON.")
     parser.add_argument("output", type=Path, help="Path to output .pptx file.")
     return parser.parse_args()

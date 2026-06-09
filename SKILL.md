@@ -1,6 +1,6 @@
 ---
 name: emba-case-study
-description: Use when analyzing a business case, teaching case, company memo, board deck, strategy review, or executive decision document in PDF, PPTX, DOCX, Markdown, or TXT format. Use for EMBA case writeups, classroom discussion prep, CEO decision framing, trade-off analysis, exhibit checking, and Traditional Chinese decision briefs drawn from case materials.
+description: Use whenever the user shares or mentions a business case, teaching case, company memo, board deck, strategy document, or executive decision paper — even if they just say "help me understand this PDF", "prepare me for class tomorrow", or "what should the CEO do here". Covers EMBA homework and case writeups, classroom discussion prep, CEO decision framing, trade-off analysis, exhibit checking, and Traditional Chinese decision briefs. Accepts PDF, PPTX, DOCX, Markdown, or TXT. Invoke even when the file type or task phrasing is vague — if the material looks like a business decision situation, this skill applies.
 ---
 
 # EMBA Case Study
@@ -12,6 +12,7 @@ Default output language: Traditional Chinese unless the user asks otherwise.
 ## Core Goal
 
 Turn raw case materials into a decision-ready analysis that:
+
 - identifies the protagonist, decision point, and urgency
 - separates facts, inference, and unresolved gaps
 - diagnoses the core dilemma beneath the surface symptoms
@@ -23,16 +24,19 @@ Turn raw case materials into a decision-ready analysis that:
 ### 0. Detect capabilities and ask before committing
 
 Before doing substantial work, detect what this session can actually use:
+
 - source-reading tools for `pdf`, `pptx`, `docx`, `md`, `txt`
 - browsing or external research capability
 - output-generation skills for `docx`, `pptx`, or `md`
 
 Start with a short capability brief to the user:
+
 - what you found
 - the safest recommended path
 - optional higher-effort paths such as OCR, external cross-verification, or file export
 
 Then ask for the user's consent before continuing whenever the next step changes effort, scope, or output shape in a meaningful way:
+
 - OCR on a scanned file
 - external browsing or market/regulatory cross-checking
 - generating deliverables such as `docx` or `pptx`
@@ -42,22 +46,26 @@ Use the checkpoint pattern in `references/delivery-and-consent.md`.
 ### 1. Ingest the source by format
 
 Pick the lightest extraction path that preserves evidence:
+
 - `pdf`: extract text, tables, exhibit labels, page references, and appendix structure
 - `pptx`: extract slide titles, bullets, charts, speaker notes if present, and slide numbers
 - `docx`: extract headings, tables, footnotes, and appendix sections
 - `md` / `txt`: read directly and preserve heading or line anchors when possible
 
 When format-specific help is available, prefer the matching document skill or tool first:
+
 - `pdf` for PDF extraction or exhibit reading
 - `pptx` for slide decks
 - `docx` for Word documents
 
 Fallback order when those tools are unavailable:
+
 1. use any host-provided document connector or parser that can expose quoted text or slide/page anchors
 2. if only partial extraction is possible, continue with the readable sections and mark the blind spots explicitly
 3. if the file cannot be read with enough fidelity for evidence-based analysis, stop and report the minimum missing capability instead of pretending to understand the case
 
 While ingesting, keep the user informed with short progress notes:
+
 - whether the file has a text layer or requires OCR
 - whether exhibits appear machine-readable or only image-readable
 - whether the current evidence is already enough for a draft analysis
@@ -67,6 +75,7 @@ Do not start analysis until the source is readable enough to quote or cite speci
 ### 2. Build the decision pivot first
 
 Start with the protagonist and the exact moment of choice:
+
 - Who is the decision owner
 - What decision must be made now
 - What changed to force urgency
@@ -77,11 +86,13 @@ Use the timeline and urgency checklist in `references/decision-pivot-checklist.m
 ### 3. Map company, industry, and structural context
 
 Reconstruct the setting with only the context needed to understand the dilemma:
+
 - company history, business model, core capabilities
 - industry size, growth, concentration, and competitor posture
 - regulation, channel power, supplier dependence, or technology constraints
 
 Decompose the situation across business dimensions:
+
 - market and channel
 - cost and supply chain
 - technology and organization
@@ -93,11 +104,13 @@ Use `references/analysis-template.md` for the section structure.
 Do not jump to recommendations after the first visible symptom.
 
 Apply two layers:
+
 - surface problem: revenue decline, margin compression, project delay, talent conflict, failed expansion
 - root dilemma: incentive mismatch, capability gap, sequencing error, governance weakness, business-model contradiction
 
 Run a compact 5 Whys pass when the case gives enough evidence.
 Then define the central trade-off clearly:
+
 - short-term profit vs long-term transformation
 - control vs speed
 - internal development vs acquisition or partnership
@@ -110,11 +123,13 @@ If the evidence is incomplete, state the competing hypotheses instead of inventi
 Treat tables, charts, and quotes as claims to be tested.
 
 Check internally:
+
 - do totals, ratios, and year-on-year changes reconcile
 - do margins, unit costs, capacity limits, or working-capital implications make sense
 - does the narrative match the numbers
 
 Check externally when the user asks for cross-verification or when live context materially affects the answer:
+
 - official regulations
 - company annual reports or investor materials
 - peer public filings
@@ -129,6 +144,7 @@ Before doing that external step, tell the user what you plan to verify and ask i
 End with decision-ready options, not generic advice.
 
 For each option, answer:
+
 - `How`: what management would actually do
 - `Why`: what evidence and logic support it
 - `Trade-off`: what cost, risk, or sacrifice comes with it
@@ -140,6 +156,7 @@ Prefer 2-4 mutually distinct options. Include a recommended path only if the use
 Before any file export, normalize the analysis into one canonical `case_spec.json`.
 
 This spec is the single source of truth for:
+
 - `md`
 - `docx`
 - `pptx`
@@ -147,33 +164,48 @@ This spec is the single source of truth for:
 Use `scripts/examples/case_spec.sample.json` as the contract.
 Do not maintain separate content specs for different output formats.
 
+**Save path**: write the file alongside the output (e.g. `outputs/<case-slug>/case_spec.json`).
+If the user has not specified an output directory, default to a sibling folder named after the case.
+
+**Chart data**: if the case contains numeric indicators suitable for a bar chart (growth rates,
+margins, market share, utilization), populate `evidence.chart_data` with real values extracted
+from the source material. Only include `chart_data` when actual numbers are available — leave the
+field absent rather than inventing placeholder values. All generators treat `chart_data` as optional
+and fall back to a text-only layout when it is missing.
+
 ### 8. Offer output format and route to the right skill
 
 Before final delivery, ask the user which output they want:
+
 - inline chat answer only
 - `md`
 - `docx`
 - `pptx`
 
 Routing rules:
+
 - `md`: prefer `scripts/generate_case_md.py` from the canonical case spec when a file is requested
 - `docx`: use a document-oriented skill or tool if available
 - `pptx`: use a presentation-oriented skill or tool if available
 
 For repo-local exports from already-structured case findings:
+
 - prefer `scripts/generate_case_pptx.py` for `pptx` when the session has `python-pptx`
 - prefer `scripts/generate_case_docx.py` for `docx` when the session has `python-docx`
 - prefer `scripts/generate_case_md.py` for `md` file export
 
 Use the schema examples before composing new export specs:
+
 - `scripts/examples/case_spec.sample.json`
 
 If the user asks for `docx` or `pptx` and this session does not have a suitable skill or tool:
+
 - stop before fabricating the file
 - say which capability is missing
 - provide a Google query the user can use to search the Anthropic skill repo
 
 Default search queries:
+
 - `site:github.com anthropic skill docx codex`
 - `site:github.com anthropic skill pptx codex`
 - `site:github.com anthropic skills presentation document generation`
@@ -202,6 +234,7 @@ Within those sections, cover the user's requested sub-questions from `references
 ## External Research Rules
 
 Use external sources only when they improve correctness:
+
 - the case references laws, rules, standards, or industry facts that may be outdated
 - the user explicitly asks for external cross-checking
 - a recommendation depends on current market or regulatory conditions
@@ -226,6 +259,7 @@ When researching, prefer primary or official sources first. Keep the case itself
 ## Failure Modes
 
 Avoid these mistakes:
+
 - writing a company summary without a decision pivot
 - giving recommendations before naming the real trade-off
 - trusting case exhibits without checking the arithmetic
