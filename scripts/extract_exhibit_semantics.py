@@ -23,6 +23,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import chart_semantics as cs  # noqa: E402
 import hierarchy_semantics as hs  # noqa: E402
 import source_document_schema as sds  # noqa: E402
 import table_semantics as ts  # noqa: E402
@@ -150,21 +151,27 @@ def extract_exhibit_semantics(source_doc: dict[str, Any]) -> dict[str, Any]:
         if not ref:
             continue
         counter += 1
-        caption_refs = figure.get("caption_refs") or []
+        # Preserve the figure and its readable labels (change: chart-figure-
+        # preservation). Never digitizes; status is image_preserved_only.
+        chart = cs.chart_exhibit_fields(figure, captions_by_ref)
+        hints = [
+            {
+                "kind": "classification",
+                "value": "chart",
+                "confidence": "inferred",
+                "source_refs": [ref],
+            },
+            *chart["semantic_hints"],
+        ]
         exhibits.append(
             {
                 "id": f"exhibit-{counter}",
                 "type": "chart",
                 "source_refs": [ref],
-                "title": _title_for(caption_refs, captions_by_ref),
-                "semantic_hints": [
-                    {
-                        "kind": "classification",
-                        "value": "chart",
-                        "confidence": "inferred",
-                        "source_refs": [ref],
-                    }
-                ],
+                "title": chart["title"],
+                "image_ref": chart["image_ref"],
+                "data_extraction_status": chart["data_extraction_status"],
+                "semantic_hints": hints,
                 # No numeric series: chart digitization is deferred (ADR-0002).
                 "checks": [],
             }
