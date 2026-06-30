@@ -138,27 +138,35 @@ def probe_versions(
             f"(exit {result.returncode}): {(result.stderr or '').strip()}"
         )
     text = f"{result.stdout}\n{result.stderr}"
+    # Real `docling --version` (2.14.0) prints, e.g.:
+    #   Docling version: 2.14.0
+    #   Docling Core version: 2.12.1
+    #   Docling IBM Models version: 3.1.0
+    #   Docling Parse version: 3.0.0
+    # It also tolerates pip-style "docling-core 2.12.1" lines.
     versions: dict[str, str | None] = {
-        "docling_version": _grep_version(text, "docling"),
-        "docling_core_version": _grep_version(text, "docling-core"),
-        "docling_parse_version": _grep_version(text, "docling-parse"),
-        "docling_ibm_models_version": _grep_version(text, "docling-ibm-models"),
+        "docling_version": _grep_version(
+            text, [r"Docling version", r"(?<![-\w])docling\s"]
+        ),
+        "docling_core_version": _grep_version(text, [r"Docling Core", r"docling-core"]),
+        "docling_parse_version": _grep_version(
+            text, [r"Docling Parse", r"docling-parse"]
+        ),
+        "docling_ibm_models_version": _grep_version(
+            text, [r"Docling IBM Models", r"docling-ibm-models"]
+        ),
     }
-    if versions["docling_version"] is None:
-        # The bare `docling --version` line typically reads "Docling version: X".
-        import re
-
-        m = re.search(r"(\d+\.\d+\.\d+)", text)
-        versions["docling_version"] = m.group(1) if m else None
     return versions
 
 
-def _grep_version(text: str, package: str) -> str | None:
+def _grep_version(text: str, labels: list[str]) -> str | None:
     import re
 
-    pattern = rf"{re.escape(package)}[^\d]*(\d+\.\d+\.\d+)"
-    m = re.search(pattern, text, re.IGNORECASE)
-    return m.group(1) if m else None
+    for label in labels:
+        m = re.search(rf"{label}[^\d\n]*?(\d+\.\d+\.\d+)", text, re.IGNORECASE)
+        if m:
+            return m.group(1)
+    return None
 
 
 # --------------------------------------------------------------------------- #

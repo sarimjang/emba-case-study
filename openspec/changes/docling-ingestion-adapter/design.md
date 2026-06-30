@@ -66,4 +66,5 @@ Additive only — new script and new output tree. No existing artifact, generato
 
 ## Open Questions
 
-- Exact normalization mapping for figure `notes`/`source` proximity is finalized when the first Docling fixture output is inspected; this does not block the `source-document/v1` field contract above.
+- RESOLVED: the normalizer was validated against real Docling 2.14.0 output (a generated multi-element PDF run through `~/.pyenv/versions/3.12.0/bin/docling`). Confirmed: pages are a dict keyed by page-no with `size.{width,height}`; `texts`/`tables`/`pictures` carry `self_ref`, `prov[0].bbox.{l,t,r,b}`, and `$ref`-form `parent`/`captions`; tables expose `data.{num_rows,num_cols,table_cells,grid}`. A trimmed (base64-stripped) copy is committed at `tests/fixtures/docling_real_2_14_0.json` as a deterministic regression fixture. The real run also exposed that `docling --version` prints `Docling Core version: X` (not `docling-core`), which the version probe now parses.
+- Figure `notes`/`source` proximity association is deferred to `hierarchy-no-grid-semantics` / `chart-figure-preservation`; the source document records figures with `data_extraction_status: image_preserved_only` and does not block the `source-document/v1` field contract.

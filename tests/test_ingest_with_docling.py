@@ -97,7 +97,14 @@ def _fixture_runner(tmp: Path, *, fail_with: str | None = None):
 
     def runner(cmd):
         if "--version" in cmd:
-            return _proc(stdout="Docling version: 2.14.0\ndocling-core 2.12.1\n")
+            return _proc(
+                stdout=(
+                    "Docling version: 2.14.0\n"
+                    "Docling Core version: 2.12.1\n"
+                    "Docling IBM Models version: 3.1.0\n"
+                    "Docling Parse version: 3.0.0\n"
+                )
+            )
         if fail_with is not None:
             return _proc(returncode=1, stderr=fail_with)
         # extraction: find --output dir, write fixture raw.json
@@ -139,16 +146,19 @@ class ExecutableResolutionTests(unittest.TestCase):
             )
         self.assertIn("version probe failed", str(ctx.exception))
 
-    def test_version_probe_success_records_versions(self):
-        exe = Path("/bin/true")
-        v = ing.probe_versions(
-            exe,
-            runner=lambda cmd: _proc(
-                stdout="Docling version: 2.14.0\ndocling-core 2.12.1\n"
-            ),
+    def test_version_probe_parses_real_label_format(self):
+        # Real `docling --version` (2.14.0) output: "Docling Core version: X", etc.
+        real = (
+            "Docling version: 2.14.0\n"
+            "Docling Core version: 2.12.1\n"
+            "Docling IBM Models version: 3.1.0\n"
+            "Docling Parse version: 3.0.0\n"
         )
+        v = ing.probe_versions(Path("/bin/true"), runner=lambda cmd: _proc(stdout=real))
         self.assertEqual(v["docling_version"], "2.14.0")
         self.assertEqual(v["docling_core_version"], "2.12.1")
+        self.assertEqual(v["docling_ibm_models_version"], "3.1.0")
+        self.assertEqual(v["docling_parse_version"], "3.0.0")
 
 
 class NormalizationTests(unittest.TestCase):
@@ -216,6 +226,29 @@ class NormalizationTests(unittest.TestCase):
         )
         self.assertEqual(
             doc["figures"][0]["data_extraction_status"], "image_preserved_only"
+        )
+
+
+class RealDoclingOutputTests(unittest.TestCase):
+    """Regression against a trimmed, real Docling 2.14.0 JSON output (base64 stripped)."""
+
+    def test_normalizes_real_output(self):
+        fixture = (
+            Path(__file__).resolve().parent / "fixtures" / "docling_real_2_14_0.json"
+        )
+        raw = json.loads(fixture.read_text(encoding="utf-8"))
+        meta = {k: "x" for k in ing.REQUIRED_SOURCE_FIELDS}
+        doc = ing.normalize_source_document(raw, meta)
+        ing.validate_source_document_minimum(doc)
+        ing.assert_no_embedded_base64(doc)
+        self.assertEqual(doc["pages"][0]["page_number"], 1)
+        self.assertEqual(doc["pages"][0]["width"], 612.0)
+        self.assertTrue(doc["tables"])
+        self.assertEqual(doc["tables"][0]["page_number"], 1)
+        self.assertTrue(doc["tables"][0]["cells"])
+        # caption refs use Docling's "$ref" form
+        self.assertTrue(
+            all(str(r).startswith("#/") for r in doc["tables"][0]["caption_refs"])
         )
 
 
