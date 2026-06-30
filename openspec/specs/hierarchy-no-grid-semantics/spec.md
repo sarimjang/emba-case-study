@@ -28,6 +28,7 @@ Blocks lacking a usable bbox MUST default to level 0 rather than being dropped.
 - **THEN** it is assigned level 0 and retained
 
 ---
+
 ### Requirement: Parent-child mapping for category headings
 
 The layer SHALL map each block to the nearest preceding block at a shallower level as its parent, so category headings own the indented rows beneath them.
@@ -45,6 +46,7 @@ Uncertain assignments MUST be expressed as semantic hints with `hint` confidence
 - **THEN** it has no parent
 
 ---
+
 ### Requirement: Value and percentage range parsing
 
 The layer SHALL parse value ranges and percentage ranges such as `70.0-80.0` into low and high bounds, reusing the shared amount parser.
@@ -56,6 +58,7 @@ A block whose text is not a range or amount MUST be left without a parsed value.
 - **THEN** it parses to a range with low `70.0` and high `80.0`
 
 ---
+
 ### Requirement: Footnote and source-note association
 
 The layer SHALL associate footnote and source-note blocks with the nearest preceding non-note block on the page, recording the association as a hint with a source reference.
@@ -66,17 +69,23 @@ The layer SHALL associate footnote and source-note blocks with the nearest prece
 - **THEN** the note is associated with that exhibit block via a hint
 
 ---
+
 ### Requirement: Conservative hierarchy exhibit construction
 
-The layer SHALL only construct a `hierarchy_table` exhibit when a page exposes at least two distinct indent levels among its text blocks and at least one leaf parses as a range or amount; otherwise it MUST NOT emit a hierarchy exhibit.
-Ordinary prose pages MUST NOT produce a spurious hierarchy exhibit.
+The layer SHALL only construct a `hierarchy_table` exhibit when a page exposes at least two distinct indent levels AND at least two short value-bearing rows — terse lines carrying an embedded range or percentage, not full narrative sentences — that align into a shared column indented beneath a category heading (indent level greater than zero); otherwise it MUST NOT emit a hierarchy exhibit.
+Ordinary prose pages, including OCR'd narrative that merely cites a statistic inline, MUST NOT produce a spurious hierarchy exhibit.
 
 #### Scenario: Hierarchy exhibit built from indented value rows
 
-- **WHEN** a page has a heading plus indented rows whose leaves carry value ranges
+- **WHEN** a page has a heading plus at least two indented rows whose terse leaves carry value ranges aligned in one column
 - **THEN** a `hierarchy_table` exhibit is emitted with parent-child hints
 
 #### Scenario: Prose page produces no hierarchy exhibit
 
 - **WHEN** a page contains only flat prose blocks with no indented value rows
+- **THEN** no `hierarchy_table` exhibit is emitted
+
+#### Scenario: Inline statistic in a narrative sentence is rejected
+
+- **WHEN** a page's only range or percentage appears inside a long prose sentence, or aligned value-like fragments sit at the root indent level with no heading above them
 - **THEN** no `hierarchy_table` exhibit is emitted

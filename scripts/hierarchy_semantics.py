@@ -13,9 +13,16 @@ Operates on ``source-document/v1`` page blocks (observed facts only). Used by
 from __future__ import annotations
 
 import re
+from collections import Counter
 from typing import Any
 
 import table_semantics as ts
+
+# A borderless value row is terse (a short label plus its value), never a full
+# narrative sentence. Real OCR'd prose carries stray inline percents inside long
+# sentences; this cap separates a value column from prose. See the precision
+# fix driven by real EMBA-case testing (benihana / pet-shop cases).
+MAX_VALUE_LEAF_CHARS = 50
 
 _NOTE_LABELS = frozenset({"footnote", "source", "source_note", "note"})
 _NOTE_TEXT_RE = re.compile(r"^\s*(source|note)\b[:\s]", re.IGNORECASE)
@@ -86,6 +93,24 @@ def parse_range(text: str) -> dict[str, Any] | None:
     return ts.parse_amount(text)
 
 
+def _value_leaves(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return blocks that look like value rows of a borderless table.
+
+    A value row is a *short* line carrying an embedded range/percent — not a
+    narrative sentence that merely mentions a statistic. The short-line gate is
+    what separates a genuine value column from prose that happens to cite a
+    percentage inline.
+    """
+    leaves: list[dict[str, Any]] = []
+    for b in blocks:
+        text = str(b.get("text", "")).strip()
+        if not text or len(text) > MAX_VALUE_LEAF_CHARS:
+            continue
+        if _EMBEDDED_RANGE_RE.search(text):
+            leaves.append(b)
+    return leaves
+
+
 def _is_note(block: dict[str, Any]) -> bool:
     label = str(block.get("label", "")).lower()
     if label in _NOTE_LABELS:
@@ -124,9 +149,19 @@ def hierarchy_exhibit_from_blocks(
     if len({levels.get(b["id"], 0) for b in usable}) < 2:
         return None
 
-    # Require a genuine embedded range/percent leaf (the borderless-hierarchy
-    # signal), not a stray number like a year in prose, to avoid false positives.
-    if not any(_EMBEDDED_RANGE_RE.search(str(b.get("text", ""))) for b in usable):
+    # Require genuine tabular structure, not a prose page that merely cites a
+    # statistic: >=2 short value-bearing rows that align into a shared column
+    # (the value column of a borderless table). A single inline percent, or
+    # value rows scattered across different indent levels, is rejected. This is
+    # the precision fix validated against real OCR'd EMBA cases.
+    leaves = _value_leaves(usable)
+    if len(leaves) < 2:
+        return None
+    # The value column must be indented beneath a category heading (level > 0):
+    # a hierarchy_table has parent categories above its value rows. Aligned
+    # fragments at the root level are flat prose, not a hierarchy.
+    level_counts = Counter(levels.get(b["id"], 0) for b in leaves)
+    if not any(n >= 2 and lvl > 0 for lvl, n in level_counts.items()):
         return None
 
     parentage = build_parent_child(usable, levels)
