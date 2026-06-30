@@ -35,9 +35,17 @@ Start with a short capability brief to the user:
 - the safest recommended path
 - optional higher-effort paths such as OCR, external cross-verification, or file export
 
+Distinguish two extraction paths and disclose the trade-off:
+
+- plain text/OCR extraction: fastest, but it flattens the document and loses structure (table boundaries, grouped headers, captions, page provenance, bounding boxes)
+- layout-aware extraction via the Docling adapter (`scripts/ingest_with_docling.py`): preserves source structure into a repo-owned `source_document.json`, the basis for exhibit semantics and source-anchored evidence
+
+Recommend the layout-aware path for scanned or exhibit-heavy cases, and state plainly that the plain path loses structure while the layout-aware path preserves it.
+
 Then ask for the user's consent before continuing whenever the next step changes effort, scope, or output shape in a meaningful way:
 
 - OCR on a scanned file
+- layout-aware Docling ingestion of a scanned or exhibit-heavy source
 - external browsing or market/regulatory cross-checking
 - generating deliverables such as `docx` or `pptx`
 
@@ -64,10 +72,17 @@ Fallback order when those tools are unavailable:
 2. if only partial extraction is possible, continue with the readable sections and mark the blind spots explicitly
 3. if the file cannot be read with enough fidelity for evidence-based analysis, stop and report the minimum missing capability instead of pretending to understand the case
 
+For scanned or image-only exhibits, prefer layout-aware ingestion before analysis:
+
+- with the user's consent, run `scripts/ingest_with_docling.py` to produce a structure-preserving `source_document.json` (and, where useful, `exhibit_semantics.json` via `scripts/extract_exhibit_semantics.py`)
+- require explicit consent first — this is a meaningful effort/scope change — and never weaken the adapter's privacy, network, or model-download gates to make a run succeed
+- depend only on `source_document.json` (and later repo-owned schemas) downstream; never read Docling raw JSON directly
+
 While ingesting, keep the user informed with short progress notes:
 
 - whether the file has a text layer or requires OCR
 - whether exhibits appear machine-readable or only image-readable
+- whether the path preserves document structure or flattens it
 - whether the current evidence is already enough for a draft analysis
 
 Do not start analysis until the source is readable enough to quote or cite specific evidence.
@@ -121,6 +136,8 @@ If the evidence is incomplete, state the competing hypotheses instead of inventi
 ### 5. Validate exhibits and claims
 
 Treat tables, charts, and quotes as claims to be tested.
+
+Require a source anchor before trusting an exhibit claim. When layout-aware ingestion was used, an exhibit interpretation must cite an `exhibit_semantics.json` anchor and an observed fact must cite a `source_document.json` anchor; an interpretation with no `source_document.json` or `exhibit_semantics.json` anchor is not treated as validated evidence.
 
 Check internally:
 
