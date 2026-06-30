@@ -299,7 +299,10 @@ def normalize_source_document(
         }
         blocks.append(block)
         if page_no in page_index:
-            page_index[page_no]["blocks"].append(block["id"])
+            # Embed the full block object (source-document/v1 requires each block
+            # to carry id/self_ref/type/label/text/page_number/bbox/parent_ref/
+            # child_refs/confidence), not just an id reference.
+            page_index[page_no]["blocks"].append(block)
 
     for text_item in raw.get("texts") or []:
         if isinstance(text_item, dict):

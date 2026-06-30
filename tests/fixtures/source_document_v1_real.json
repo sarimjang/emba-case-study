@@ -1,0 +1,241 @@
+{
+  "schema_version": "source-document/v1",
+  "source": {
+    "path": "/private/tmp/docling_probe/case2.pdf",
+    "mime_type": "application/pdf",
+    "provider": "docling",
+    "provider_version": "2.14.0",
+    "ingested_at": "2026-06-30T08:06:04.893504+00:00",
+    "docling_command": "/Users/slc_javi/.pyenv/versions/3.12.0/bin/docling /private/tmp/docling_probe/case2.pdf --to json --output /private/tmp/docling_probe/ing2/docling --ocr --ocr-lang en --table-mode accurate --device cpu --document-timeout 180"
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "width": 612.0,
+      "height": 792.0,
+      "blocks": [
+        {
+          "id": "texts/0",
+          "self_ref": "#/texts/0",
+          "type": "text",
+          "label": "section_header",
+          "text": "Wilkerson Company Case",
+          "page_number": 1,
+          "bbox": [
+            195.4709930419922,
+            708.9240112304688,
+            393.47100830078125,
+            692.2739868164062
+          ],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/1",
+          "self_ref": "#/texts/1",
+          "type": "text",
+          "label": "section_header",
+          "text": "Exhibit 5: Product Profitability",
+          "page_number": 1,
+          "bbox": [
+            78.0,
+            676.052001953125,
+            302.0,
+            663.1019897460938
+          ],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/2",
+          "self_ref": "#/texts/2",
+          "type": "text",
+          "label": "text",
+          "text": "This indented paragraph describes the cost structure observed in the exhibit.",
+          "page_number": 1,
+          "bbox": [
+            78.0,
+            653.1799926757812,
+            463.0,
+            643.9299926757812
+          ],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/3",
+          "self_ref": "#/texts/3",
+          "type": "text",
+          "label": "caption",
+          "text": "Table 1. Margins by product (caption)",
+          "page_number": 1,
+          "bbox": [
+            78.0,
+            623.1799926757812,
+            263.0,
+            613.9299926757812
+          ],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/4",
+          "self_ref": "#/texts/4",
+          "type": "text",
+          "label": "text",
+          "text": "Source: company filings, 1995. Footer note.",
+          "page_number": 1,
+          "bbox": [
+            78.0,
+            533.18,
+            293.0,
+            523.93
+          ],
+          "parent_ref": "#/groups/0",
+          "child_refs": [],
+          "confidence": null
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "tables/0",
+      "self_ref": "#/tables/0",
+      "page_number": 1,
+      "bbox": [
+        238.39633178710938,
+        615.0557861328125,
+        374.4856262207031,
+        559.59326171875
+      ],
+      "num_rows": 3,
+      "num_cols": 2,
+      "caption_refs": [
+        "#/texts/3"
+      ],
+      "cells": [
+        {
+          "bbox": {
+            "l": 244.25,
+            "t": 608.1799926757812,
+            "r": 279.25,
+            "b": 598.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 0,
+          "end_row_offset_idx": 1,
+          "start_col_offset_idx": 0,
+          "end_col_offset_idx": 1,
+          "text": "Product",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        },
+        {
+          "bbox": {
+            "l": 290.7099914550781,
+            "t": 608.1799926757812,
+            "r": 362.7300109863281,
+            "b": 598.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 0,
+          "end_row_offset_idx": 1,
+          "start_col_offset_idx": 1,
+          "end_col_offset_idx": 2,
+          "text": "Revenue Cost",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        },
+        {
+          "bbox": {
+            "l": 244.25,
+            "t": 590.1799926757812,
+            "r": 274.25,
+            "b": 580.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 1,
+          "end_row_offset_idx": 2,
+          "start_col_offset_idx": 0,
+          "end_col_offset_idx": 1,
+          "text": "Valves",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        },
+        {
+          "bbox": {
+            "l": 290.7099914550781,
+            "t": 590.1799926757812,
+            "r": 367.7300109863281,
+            "b": 580.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 1,
+          "end_row_offset_idx": 2,
+          "start_col_offset_idx": 1,
+          "end_col_offset_idx": 2,
+          "text": "2,000 1,200",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        },
+        {
+          "bbox": {
+            "l": 244.25,
+            "t": 572.1799926757812,
+            "r": 269.25,
+            "b": 562.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 2,
+          "end_row_offset_idx": 3,
+          "start_col_offset_idx": 0,
+          "end_col_offset_idx": 1,
+          "text": "Pumps",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        },
+        {
+          "bbox": {
+            "l": 290.7099914550781,
+            "t": 572.1799926757812,
+            "r": 357.7300109863281,
+            "b": 562.9299926757812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "row_span": 1,
+          "col_span": 1,
+          "start_row_offset_idx": 2,
+          "end_row_offset_idx": 3,
+          "start_col_offset_idx": 1,
+          "end_col_offset_idx": 2,
+          "text": "(500) 700",
+          "column_header": false,
+          "row_header": false,
+          "row_section": false
+        }
+      ]
+    }
+  ],
+  "figures": [],
+  "notes": []
+}
