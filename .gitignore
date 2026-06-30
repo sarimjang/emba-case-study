@@ -1,8 +1,12 @@
 .omx/
 .omc/
+.workflow/
 .DS_Store
 __pycache__/
 .ruff_cache/
 *.pptx
 *.docx
 *.spec.json
+
+# Spectra app data
+.spectra/

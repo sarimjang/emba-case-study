@@ -4,14 +4,10 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 from typing import Any
 
-
-def load_spec(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+from case_spec_utils import OutputPathError, SpecValidationError, load_spec, prepare_output_path
 
 
 def bullets(items: list[str]) -> str:
@@ -114,6 +110,11 @@ def build_markdown(spec: dict[str, Any]) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate markdown from the canonical case spec.")
+    parser.add_argument(
+        "--allow-outside-workspace",
+        action="store_true",
+        help="Allow writing outside the current workspace or spec directory.",
+    )
     parser.add_argument("spec", type=Path, help="Path to canonical case spec JSON.")
     parser.add_argument("output", type=Path, help="Path to output markdown file.")
     return parser.parse_args()
@@ -121,9 +122,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    spec = load_spec(args.spec)
-    output_path = args.output.expanduser().resolve()
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        spec = load_spec(args.spec)
+        output_path = prepare_output_path(
+            args.output,
+            allowed_roots=[Path.cwd(), args.spec.expanduser().resolve().parent],
+            expected_suffix=".md",
+            allow_outside_workspace=args.allow_outside_workspace,
+        )
+    except (OutputPathError, SpecValidationError) as exc:
+        raise SystemExit(f"Error: {exc}") from exc
+
     output_path.write_text(build_markdown(spec), encoding="utf-8")
     print(output_path)
 

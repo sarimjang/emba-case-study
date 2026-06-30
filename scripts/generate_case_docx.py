@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 from typing import Any
 
@@ -14,17 +13,14 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
+from case_spec_utils import OutputPathError, SpecValidationError, load_spec, prepare_output_path
+
 
 FONT = "Microsoft JhengHei"
 TITLE_COLOR = RGBColor(25, 43, 79)
 HEADING_COLOR = RGBColor(49, 91, 163)
 TEXT_COLOR = RGBColor(40, 40, 40)
 MUTED_COLOR = RGBColor(95, 103, 115)
-
-
-def load_spec(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 def set_cell_shading(cell, fill: str) -> None:
@@ -225,6 +221,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate DOCX from the canonical case spec."
     )
+    parser.add_argument(
+        "--allow-outside-workspace",
+        action="store_true",
+        help="Allow writing outside the current workspace or spec directory.",
+    )
     parser.add_argument("spec", type=Path, help="Path to canonical case spec JSON.")
     parser.add_argument("output", type=Path, help="Path to output .docx file.")
     return parser.parse_args()
@@ -232,10 +233,18 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    spec = load_spec(args.spec)
+    try:
+        spec = load_spec(args.spec)
+        output_path = prepare_output_path(
+            args.output,
+            allowed_roots=[Path.cwd(), args.spec.expanduser().resolve().parent],
+            expected_suffix=".docx",
+            allow_outside_workspace=args.allow_outside_workspace,
+        )
+    except (OutputPathError, SpecValidationError) as exc:
+        raise SystemExit(f"Error: {exc}") from exc
+
     doc = build_document(spec)
-    output_path = args.output.expanduser().resolve()
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(output_path)
     print(output_path)
 
