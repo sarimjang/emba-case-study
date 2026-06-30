@@ -23,6 +23,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import hierarchy_semantics as hs  # noqa: E402
 import source_document_schema as sds  # noqa: E402
 import table_semantics as ts  # noqa: E402
 
@@ -168,6 +169,18 @@ def extract_exhibit_semantics(source_doc: dict[str, Any]) -> dict[str, Any]:
                 "checks": [],
             }
         )
+
+    # Conservative no-grid hierarchy pass: build a hierarchy_table exhibit per
+    # page only when indentation + a value-range leaf give strong evidence
+    # (change: hierarchy-no-grid-semantics). Prose pages produce nothing.
+    for page in source_doc.get("pages") or []:
+        blocks = page.get("blocks") or []
+        page_ref = f"#/pages/{page.get('page_number')}"
+        hierarchy = hs.hierarchy_exhibit_from_blocks(blocks, page_ref)
+        if hierarchy is not None:
+            counter += 1
+            hierarchy["id"] = f"exhibit-{counter}"
+            exhibits.append(hierarchy)
 
     return {"schema_version": SCHEMA_VERSION, "exhibits": exhibits}
 
