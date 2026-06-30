@@ -1,0 +1,35 @@
+schema: spec-driven
+
+context: |
+  Project: EMBA case-study skill. Python scripts ingest source documents and
+  export EMBA case analysis to md / docx / pptx / html.
+
+  Active initiative: a layout-aware ingestion pipeline staged as
+  source file -> Docling raw JSON -> source_document.json ->
+  exhibit_semantics.json -> case_spec.json -> exports.
+
+  Authoritative planning docs (reference by path; do NOT duplicate their content
+  in change artifacts, only add proposal-specific deltas):
+    - ROADMAP.md (9-change decomposition, contracts, phases, verification)
+    - CONTEXT.md (domain glossary: Source Document, Exhibit Semantics, Case Spec,
+      Semantic Confidence, Source Reference Rule)
+    - docs/adr/0001-keep-docling-raw-json-out-of-public-contract.md
+    - docs/adr/0002-defer-chart-digitization.md
+    - SKILL.md (current skill capability surface)
+
+  Cross-change contracts: Docling raw JSON is debug/audit only; downstream depends
+  on source_document.json or later repo-owned schemas, never Docling raw JSON.
+  Acceptance fixtures must be deterministic and repo-owned; real EMBA PDFs are
+  exploratory only. Chart digitization is deferred (first scope preserves
+  figures/labels/captions/sources/notes, no plotted-value estimation).
+  Privacy/network/model-download gates apply to any ingestion work.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
