@@ -13,7 +13,13 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
-from case_spec_utils import OutputPathError, SpecValidationError, load_spec, prepare_output_path
+from case_spec_utils import (
+    OutputPathError,
+    SpecValidationError,
+    evidence_item_text,
+    load_spec,
+    prepare_output_path,
+)
 
 
 FONT = "Microsoft JhengHei"
@@ -72,10 +78,10 @@ def add_paragraph(
     style_run(r, size, color=color or TEXT_COLOR)
 
 
-def add_bullets(doc: Document, items: list[str]) -> None:
+def add_bullets(doc: Document, items: list) -> None:
     for item in items:
         p = doc.add_paragraph(style="List Bullet")
-        r = p.add_run(item)
+        r = p.add_run(evidence_item_text(item))
         style_run(r, 11)
 
 

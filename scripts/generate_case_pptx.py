@@ -15,7 +15,13 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Inches, Pt
 
-from case_spec_utils import OutputPathError, SpecValidationError, load_spec, prepare_output_path
+from case_spec_utils import (
+    OutputPathError,
+    SpecValidationError,
+    evidence_item_text,
+    load_spec,
+    prepare_output_path,
+)
 
 
 SLIDE_W = Inches(13.333)
@@ -111,7 +117,7 @@ class DeckBuilder:
             first = False
             p.space_after = Pt(6)
             r = p.add_run()
-            r.text = item
+            r.text = evidence_item_text(item)
             r.font.name = FONT
             r.font.size = Pt(size)
             r.font.color.rgb = self.color(color, "ink")
