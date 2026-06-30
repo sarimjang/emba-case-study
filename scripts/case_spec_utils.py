@@ -80,6 +80,25 @@ def _validate_evidence_object(obj: dict[str, Any], label: str) -> None:
         )
 
 
+def evidence_item_text(item: Any) -> str:
+    """Render an evidence item (legacy string or structured object) to display text.
+
+    A string is returned verbatim (legacy output is unchanged). A structured
+    evidence object renders its ``text`` first, followed by a compact
+    ``(sources: ...)`` suffix when ``source_refs`` is non-empty. Used by the MD,
+    DOCX, and PPTX generators so all three render structured evidence identically.
+    """
+    if isinstance(item, str):
+        return item
+    if isinstance(item, dict):
+        text = str(item.get("text", "")).strip()
+        refs = item.get("source_refs") or []
+        if refs:
+            return f"{text}  (sources: {', '.join(str(r) for r in refs)})"
+        return text
+    return str(item)
+
+
 def _expect_evidence_list(value: Any, label: str) -> list[Any]:
     """Accept a list whose items are legacy strings or structured evidence objects."""
     if not isinstance(value, list):

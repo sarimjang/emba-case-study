@@ -7,11 +7,17 @@ import argparse
 from pathlib import Path
 from typing import Any
 
-from case_spec_utils import OutputPathError, SpecValidationError, load_spec, prepare_output_path
+from case_spec_utils import (
+    OutputPathError,
+    SpecValidationError,
+    evidence_item_text,
+    load_spec,
+    prepare_output_path,
+)
 
 
-def bullets(items: list[str]) -> str:
-    return "\n".join(f"- {item}" for item in items)
+def bullets(items: list) -> str:
+    return "\n".join(f"- {evidence_item_text(item)}" for item in items)
 
 
 def build_markdown(spec: dict[str, Any]) -> str:
@@ -109,7 +115,9 @@ def build_markdown(spec: dict[str, Any]) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate markdown from the canonical case spec.")
+    parser = argparse.ArgumentParser(
+        description="Generate markdown from the canonical case spec."
+    )
     parser.add_argument(
         "--allow-outside-workspace",
         action="store_true",
