@@ -1,0 +1,477 @@
+{
+ "schema_name": "DoclingDocument",
+ "version": "1.0.0",
+ "name": "fixture",
+ "origin": {
+  "mimetype": "application/pdf",
+  "binary_hash": 5776403621703349176,
+  "filename": "fixture.pdf"
+ },
+ "furniture": {
+  "self_ref": "#/furniture",
+  "children": [],
+  "name": "_root_",
+  "label": "unspecified"
+ },
+ "body": {
+  "self_ref": "#/body",
+  "children": [
+   {
+    "$ref": "#/texts/0"
+   },
+   {
+    "$ref": "#/texts/1"
+   },
+   {
+    "$ref": "#/texts/2"
+   },
+   {
+    "$ref": "#/texts/3"
+   },
+   {
+    "$ref": "#/tables/0"
+   },
+   {
+    "$ref": "#/groups/0"
+   }
+  ],
+  "name": "_root_",
+  "label": "unspecified"
+ },
+ "groups": [
+  {
+   "self_ref": "#/groups/0",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [
+    {
+     "$ref": "#/texts/4"
+    }
+   ],
+   "name": "group",
+   "label": "key_value_area"
+  }
+ ],
+ "texts": [
+  {
+   "self_ref": "#/texts/0",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [],
+   "label": "section_header",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 195.4709930419922,
+      "t": 708.9240112304688,
+      "r": 393.47100830078125,
+      "b": 692.2739868164062,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      22
+     ]
+    }
+   ],
+   "orig": "Wilkerson Company Case",
+   "text": "Wilkerson Company Case",
+   "level": 1
+  },
+  {
+   "self_ref": "#/texts/1",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [],
+   "label": "section_header",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 78.0,
+      "t": 676.052001953125,
+      "r": 302.0,
+      "b": 663.1019897460938,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      32
+     ]
+    }
+   ],
+   "orig": "Exhibit 5: Product Profitability",
+   "text": "Exhibit 5: Product Profitability",
+   "level": 1
+  },
+  {
+   "self_ref": "#/texts/2",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [],
+   "label": "text",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 78.0,
+      "t": 653.1799926757812,
+      "r": 463.0,
+      "b": 643.9299926757812,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      77
+     ]
+    }
+   ],
+   "orig": "This indented paragraph describes the cost structure observed in the exhibit.",
+   "text": "This indented paragraph describes the cost structure observed in the exhibit."
+  },
+  {
+   "self_ref": "#/texts/3",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [],
+   "label": "caption",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 78.0,
+      "t": 623.1799926757812,
+      "r": 263.0,
+      "b": 613.9299926757812,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      37
+     ]
+    }
+   ],
+   "orig": "Table 1. Margins by product (caption)",
+   "text": "Table 1. Margins by product (caption)"
+  },
+  {
+   "self_ref": "#/texts/4",
+   "parent": {
+    "$ref": "#/groups/0"
+   },
+   "children": [],
+   "label": "text",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 78.0,
+      "t": 533.18,
+      "r": 293.0,
+      "b": 523.93,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      43
+     ]
+    }
+   ],
+   "orig": "Source: company filings, 1995. Footer note.",
+   "text": "Source: company filings, 1995. Footer note."
+  }
+ ],
+ "pictures": [],
+ "tables": [
+  {
+   "self_ref": "#/tables/0",
+   "parent": {
+    "$ref": "#/body"
+   },
+   "children": [],
+   "label": "table",
+   "prov": [
+    {
+     "page_no": 1,
+     "bbox": {
+      "l": 238.39633178710938,
+      "t": 615.0557861328125,
+      "r": 374.4856262207031,
+      "b": 559.59326171875,
+      "coord_origin": "BOTTOMLEFT"
+     },
+     "charspan": [
+      0,
+      0
+     ]
+    }
+   ],
+   "captions": [
+    {
+     "$ref": "#/texts/3"
+    }
+   ],
+   "references": [],
+   "footnotes": [],
+   "data": {
+    "table_cells": [
+     {
+      "bbox": {
+       "l": 244.25,
+       "t": 608.1799926757812,
+       "r": 279.25,
+       "b": 598.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 0,
+      "end_row_offset_idx": 1,
+      "start_col_offset_idx": 0,
+      "end_col_offset_idx": 1,
+      "text": "Product",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     },
+     {
+      "bbox": {
+       "l": 290.7099914550781,
+       "t": 608.1799926757812,
+       "r": 362.7300109863281,
+       "b": 598.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 0,
+      "end_row_offset_idx": 1,
+      "start_col_offset_idx": 1,
+      "end_col_offset_idx": 2,
+      "text": "Revenue Cost",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     },
+     {
+      "bbox": {
+       "l": 244.25,
+       "t": 590.1799926757812,
+       "r": 274.25,
+       "b": 580.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 1,
+      "end_row_offset_idx": 2,
+      "start_col_offset_idx": 0,
+      "end_col_offset_idx": 1,
+      "text": "Valves",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     },
+     {
+      "bbox": {
+       "l": 290.7099914550781,
+       "t": 590.1799926757812,
+       "r": 367.7300109863281,
+       "b": 580.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 1,
+      "end_row_offset_idx": 2,
+      "start_col_offset_idx": 1,
+      "end_col_offset_idx": 2,
+      "text": "2,000 1,200",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     },
+     {
+      "bbox": {
+       "l": 244.25,
+       "t": 572.1799926757812,
+       "r": 269.25,
+       "b": 562.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 2,
+      "end_row_offset_idx": 3,
+      "start_col_offset_idx": 0,
+      "end_col_offset_idx": 1,
+      "text": "Pumps",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     },
+     {
+      "bbox": {
+       "l": 290.7099914550781,
+       "t": 572.1799926757812,
+       "r": 357.7300109863281,
+       "b": 562.9299926757812,
+       "coord_origin": "BOTTOMLEFT"
+      },
+      "row_span": 1,
+      "col_span": 1,
+      "start_row_offset_idx": 2,
+      "end_row_offset_idx": 3,
+      "start_col_offset_idx": 1,
+      "end_col_offset_idx": 2,
+      "text": "(500) 700",
+      "column_header": false,
+      "row_header": false,
+      "row_section": false
+     }
+    ],
+    "num_rows": 3,
+    "num_cols": 2,
+    "grid": [
+     [
+      {
+       "bbox": {
+        "l": 244.25,
+        "t": 608.1799926757812,
+        "r": 279.25,
+        "b": 598.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 0,
+       "end_row_offset_idx": 1,
+       "start_col_offset_idx": 0,
+       "end_col_offset_idx": 1,
+       "text": "Product",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      },
+      {
+       "bbox": {
+        "l": 290.7099914550781,
+        "t": 608.1799926757812,
+        "r": 362.7300109863281,
+        "b": 598.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 0,
+       "end_row_offset_idx": 1,
+       "start_col_offset_idx": 1,
+       "end_col_offset_idx": 2,
+       "text": "Revenue Cost",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      }
+     ],
+     [
+      {
+       "bbox": {
+        "l": 244.25,
+        "t": 590.1799926757812,
+        "r": 274.25,
+        "b": 580.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 1,
+       "end_row_offset_idx": 2,
+       "start_col_offset_idx": 0,
+       "end_col_offset_idx": 1,
+       "text": "Valves",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      },
+      {
+       "bbox": {
+        "l": 290.7099914550781,
+        "t": 590.1799926757812,
+        "r": 367.7300109863281,
+        "b": 580.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 1,
+       "end_row_offset_idx": 2,
+       "start_col_offset_idx": 1,
+       "end_col_offset_idx": 2,
+       "text": "2,000 1,200",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      }
+     ],
+     [
+      {
+       "bbox": {
+        "l": 244.25,
+        "t": 572.1799926757812,
+        "r": 269.25,
+        "b": 562.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 2,
+       "end_row_offset_idx": 3,
+       "start_col_offset_idx": 0,
+       "end_col_offset_idx": 1,
+       "text": "Pumps",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      },
+      {
+       "bbox": {
+        "l": 290.7099914550781,
+        "t": 572.1799926757812,
+        "r": 357.7300109863281,
+        "b": 562.9299926757812,
+        "coord_origin": "BOTTOMLEFT"
+       },
+       "row_span": 1,
+       "col_span": 1,
+       "start_row_offset_idx": 2,
+       "end_row_offset_idx": 3,
+       "start_col_offset_idx": 1,
+       "end_col_offset_idx": 2,
+       "text": "(500) 700",
+       "column_header": false,
+       "row_header": false,
+       "row_section": false
+      }
+     ]
+    ]
+   }
+  }
+ ],
+ "key_value_items": [],
+ "pages": {
+  "1": {
+   "size": {
+    "width": 612.0,
+    "height": 792.0
+   },
+   "image": null,
+   "page_no": 1
+  }
+ }
+}
