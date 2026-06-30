@@ -24,6 +24,10 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import source_document_schema as sds  # noqa: E402
+import table_semantics as ts  # noqa: E402
+
+# Exhibit types whose tables get detailed table semantics (change: table-semantics).
+_TABLE_SEMANTIC_TYPES = frozenset({"grid_table", "matrix_table", "financial_statement"})
 
 SCHEMA_VERSION = "exhibit-semantics/v1"
 
@@ -111,23 +115,34 @@ def extract_exhibit_semantics(source_doc: dict[str, Any]) -> dict[str, Any]:
         counter += 1
         etype, conf = classify_table(table)
         caption_refs = table.get("caption_refs") or []
-        exhibits.append(
+        hints = [
             {
-                "id": f"exhibit-{counter}",
-                "type": etype,
+                "kind": "classification",
+                "value": etype,
+                "confidence": conf,
                 "source_refs": [ref],
-                "title": _title_for(caption_refs, captions_by_ref),
-                "semantic_hints": [
-                    {
-                        "kind": "classification",
-                        "value": etype,
-                        "confidence": conf,
-                        "source_refs": [ref],
-                    }
-                ],
-                "checks": [],
             }
-        )
+        ]
+        checks: list[dict[str, Any]] = []
+        roled_cells: list[dict[str, Any]] | None = None
+        if etype in _TABLE_SEMANTIC_TYPES:
+            # Enrich with detailed table semantics (cell roles, subtotal/total
+            # candidates, arithmetic checks) per change: table-semantics.
+            sem = ts.table_semantics(table, ref)
+            roled_cells = sem["roled_cells"]
+            hints.extend(sem["hints"])
+            checks.extend(sem["checks"])
+        exhibit = {
+            "id": f"exhibit-{counter}",
+            "type": etype,
+            "source_refs": [ref],
+            "title": _title_for(caption_refs, captions_by_ref),
+            "semantic_hints": hints,
+            "checks": checks,
+        }
+        if roled_cells is not None:
+            exhibit["roled_cells"] = roled_cells
+        exhibits.append(exhibit)
 
     for figure in source_doc.get("figures") or []:
         ref = figure.get("self_ref")
