@@ -4,6 +4,7 @@ artifacts and writes the two projections without mutating the inputs."""
 
 from __future__ import annotations
 
+import os
 import sys
 import tempfile
 import unittest
@@ -44,6 +45,18 @@ class TestCLI(unittest.TestCase):
 
         self.assertEqual(SOURCE_DOC.read_bytes(), before_source)
         self.assertEqual(EXHIBIT_SEMANTICS.read_bytes(), before_semantics)
+
+    def test_defaults_to_current_working_directory_when_paths_omitted(self):
+        cwd_before = os.getcwd()
+        with tempfile.TemporaryDirectory() as tmp:
+            try:
+                os.chdir(tmp)
+                rc = cl.main([str(SOURCE_DOC), str(EXHIBIT_SEMANTICS)])
+                self.assertEqual(rc, 0)
+                self.assertTrue((Path(tmp) / "reading_view.md").exists())
+                self.assertTrue((Path(tmp) / "rag_chunks.jsonl").exists())
+            finally:
+                os.chdir(cwd_before)
 
 
 if __name__ == "__main__":

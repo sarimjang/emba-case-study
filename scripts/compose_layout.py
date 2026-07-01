@@ -341,10 +341,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("source_document", help="Path to source_document.json")
     parser.add_argument("exhibit_semantics", help="Path to exhibit_semantics.json")
     parser.add_argument(
-        "--reading-view", required=True, help="Output path for reading_view.md"
+        "--reading-view",
+        default="reading_view.md",
+        help="Output path for reading_view.md (default: ./reading_view.md)",
     )
     parser.add_argument(
-        "--rag-chunks", required=True, help="Output path for rag_chunks.jsonl"
+        "--rag-chunks",
+        default="rag_chunks.jsonl",
+        help="Output path for rag_chunks.jsonl (default: ./rag_chunks.jsonl)",
     )
     args = parser.parse_args(argv)
 
