@@ -1,0 +1,67 @@
+{
+  "source_document": {
+    "schema_version": "source-document/v1",
+    "pages": [
+      {
+        "page_number": 1,
+        "width": 612.0,
+        "height": 792.0,
+        "blocks": [
+          {
+            "id": "texts/0",
+            "self_ref": "#/texts/0",
+            "type": "text",
+            "label": "text",
+            "text": "cell value",
+            "page_number": 1,
+            "bbox": [40.0, 60.0, 60.0, 50.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          },
+          {
+            "id": "texts/1",
+            "self_ref": "#/texts/1",
+            "type": "text",
+            "label": "text",
+            "text": "cell value",
+            "page_number": 1,
+            "bbox": [500.0, 780.0, 520.0, 770.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          }
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "id": "tables/0",
+        "self_ref": "#/tables/0",
+        "page_number": 1,
+        "bbox": [0.0, 100.0, 100.0, 0.0],
+        "caption_refs": [],
+        "cells": [{"row": 0, "col": 0, "text": "cell value"}]
+      }
+    ],
+    "figures": [],
+    "notes": []
+  },
+  "exhibit_semantics": {
+    "schema_version": "exhibit-semantics/v1",
+    "exhibits": [
+      {
+        "id": "exhibit-1",
+        "type": "grid_table",
+        "source_refs": ["#/tables/0"],
+        "title": null,
+        "semantic_hints": [],
+        "checks": []
+      }
+    ]
+  },
+  "expected": {
+    "suppressed_refs": ["#/texts/0"],
+    "preserved_refs": ["#/texts/1"]
+  }
+}

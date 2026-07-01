@@ -1,0 +1,54 @@
+{
+  "source_document": {
+    "schema_version": "source-document/v1",
+    "pages": [
+      {
+        "page_number": 1,
+        "width": 612.0,
+        "height": 792.0,
+        "blocks": [
+          {
+            "id": "texts/0",
+            "self_ref": "#/texts/0",
+            "type": "text",
+            "label": "text",
+            "text": "cost summary Exhibit 5 details.",
+            "page_number": 1,
+            "bbox": [78.0, 700.0, 400.0, 688.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          }
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "id": "tables/0",
+        "self_ref": "#/tables/0",
+        "page_number": 1,
+        "bbox": [78.0, 670.0, 300.0, 600.0],
+        "caption_refs": [],
+        "cells": [{"row": 0, "col": 0, "text": "value"}]
+      }
+    ],
+    "figures": [],
+    "notes": []
+  },
+  "exhibit_semantics": {
+    "schema_version": "exhibit-semantics/v1",
+    "exhibits": [
+      {
+        "id": "exhibit-1",
+        "type": "grid_table",
+        "source_refs": ["#/tables/0"],
+        "title": "cost summary",
+        "semantic_hints": [],
+        "checks": []
+      }
+    ]
+  },
+  "expected": {
+    "bindings": {"5": {"exhibit_id": "exhibit-1", "tier": "inferred"}}
+  }
+}

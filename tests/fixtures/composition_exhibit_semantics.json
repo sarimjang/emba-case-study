@@ -1,0 +1,19 @@
+{
+  "schema_version": "exhibit-semantics/v1",
+  "exhibits": [
+    {
+      "id": "exhibit-1",
+      "type": "grid_table",
+      "source_refs": ["#/tables/0"],
+      "title": "Exhibit 1: Product Margins",
+      "semantic_hints": [],
+      "checks": [],
+      "roled_cells": [
+        {"row": 0, "col": 0, "text": "Product", "role": "header"},
+        {"row": 0, "col": 1, "text": "Margin", "role": "header"},
+        {"row": 1, "col": 0, "text": "Widget", "role": "label"},
+        {"row": 1, "col": 1, "text": "42%", "role": "value"}
+      ]
+    }
+  ]
+}
