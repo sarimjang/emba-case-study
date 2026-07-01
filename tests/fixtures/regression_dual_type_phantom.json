@@ -1,0 +1,51 @@
+{
+  "source_document": {
+    "schema_version": "source-document/v1",
+    "pages": [
+      {
+        "page_number": 1,
+        "width": 612.0,
+        "height": 792.0,
+        "blocks": [
+          {
+            "id": "texts/0",
+            "self_ref": "#/texts/0",
+            "type": "text",
+            "label": "text",
+            "text": "Exhibit 7",
+            "page_number": 1,
+            "bbox": [10.0, 700.0, 60.0, 690.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          },
+          {
+            "id": "texts/1",
+            "self_ref": "#/texts/1",
+            "type": "text",
+            "label": "text",
+            "text": "As mentioned in Exhibit 9 elsewhere.",
+            "page_number": 1,
+            "bbox": [10.0, 600.0, 200.0, 590.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          }
+        ]
+      }
+    ],
+    "tables": [],
+    "figures": [],
+    "notes": []
+  },
+  "exhibit_semantics": {
+    "schema_version": "exhibit-semantics/v1",
+    "exhibits": []
+  },
+  "expected": {
+    "phantom_types": {
+      "7": "label-detected-object-undetected",
+      "9": "mentioned-only"
+    }
+  }
+}

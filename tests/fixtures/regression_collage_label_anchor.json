@@ -1,0 +1,68 @@
+{
+  "source_document": {
+    "schema_version": "source-document/v1",
+    "pages": [
+      {
+        "page_number": 1,
+        "width": 612.0,
+        "height": 800.0,
+        "blocks": [
+          {
+            "id": "texts/0",
+            "self_ref": "#/texts/0",
+            "type": "text",
+            "label": "text",
+            "text": "Exhibit 3",
+            "page_number": 1,
+            "bbox": [100.0, 100.0, 150.0, 90.0],
+            "parent_ref": "#/body",
+            "child_refs": [],
+            "confidence": null
+          }
+        ]
+      }
+    ],
+    "tables": [],
+    "figures": [
+      {
+        "id": "figures/0",
+        "self_ref": "#/figures/0",
+        "page_number": 1,
+        "bbox": [100.0, 95.0, 150.0, 85.0],
+        "caption_refs": []
+      },
+      {
+        "id": "figures/1",
+        "self_ref": "#/figures/1",
+        "page_number": 1,
+        "bbox": [500.0, 500.0, 550.0, 490.0],
+        "caption_refs": []
+      }
+    ],
+    "notes": []
+  },
+  "exhibit_semantics": {
+    "schema_version": "exhibit-semantics/v1",
+    "exhibits": [
+      {
+        "id": "exhibit-1",
+        "type": "chart",
+        "source_refs": ["#/figures/0"],
+        "title": null,
+        "semantic_hints": [],
+        "checks": []
+      },
+      {
+        "id": "exhibit-2",
+        "type": "chart",
+        "source_refs": ["#/figures/1"],
+        "title": null,
+        "semantic_hints": [],
+        "checks": []
+      }
+    ]
+  },
+  "expected": {
+    "bindings": {"3": {"exhibit_id": "exhibit-1", "tier": "hint"}}
+  }
+}

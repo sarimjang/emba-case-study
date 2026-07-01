@@ -1,0 +1,73 @@
+{
+  "schema_version": "source-document/v1",
+  "source": {
+    "path": "/synthetic/composition_case.pdf",
+    "mime_type": "application/pdf",
+    "provider": "docling",
+    "provider_version": "2.14.0",
+    "ingested_at": "2026-01-01T00:00:00+00:00",
+    "docling_command": "synthetic-fixture, no real PDF"
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "width": 612.0,
+      "height": 792.0,
+      "blocks": [
+        {
+          "id": "texts/0",
+          "self_ref": "#/texts/0",
+          "type": "text",
+          "label": "section_header",
+          "text": "Synthetic Case",
+          "page_number": 1,
+          "bbox": [78.0, 740.0, 300.0, 728.0],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/1",
+          "self_ref": "#/texts/1",
+          "type": "text",
+          "label": "text",
+          "text": "Margins are discussed in Exhibit 1 below.",
+          "page_number": 1,
+          "bbox": [78.0, 700.0, 400.0, 688.0],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        },
+        {
+          "id": "texts/2",
+          "self_ref": "#/texts/2",
+          "type": "text",
+          "label": "caption",
+          "text": "Exhibit 1: Product Margins",
+          "page_number": 1,
+          "bbox": [78.0, 670.0, 300.0, 658.0],
+          "parent_ref": "#/body",
+          "child_refs": [],
+          "confidence": null
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "tables/0",
+      "self_ref": "#/tables/0",
+      "page_number": 1,
+      "bbox": [78.0, 655.0, 300.0, 600.0],
+      "caption_refs": ["#/texts/2"],
+      "cells": [
+        {"row": 0, "col": 0, "text": "Product", "row_span": 1, "col_span": 1},
+        {"row": 0, "col": 1, "text": "Margin", "row_span": 1, "col_span": 1},
+        {"row": 1, "col": 0, "text": "Widget", "row_span": 1, "col_span": 1},
+        {"row": 1, "col": 1, "text": "42%", "row_span": 1, "col_span": 1}
+      ]
+    }
+  ],
+  "figures": [],
+  "notes": []
+}
