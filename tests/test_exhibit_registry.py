@@ -137,6 +137,19 @@ class TestTierB(unittest.TestCase):
         result = er.resolve(doc, sem)
         self.assertNotIn("7", result["bindings"])
 
+    def test_head_inside_unrelated_word_does_not_bind(self):
+        # "team" must not match as a substring of "steamed" — a head match
+        # only counts when it lands on a word boundary in the source text.
+        doc = make_doc(
+            [page([block("#/texts/0", "the steamed data appears in Exhibit 5.")])],
+            tables=[obj("#/tables/0", caption_refs=[])],
+        )
+        sem = {
+            "exhibits": [exhibit("exhibit-1", source_refs=["#/tables/0"], title="team")]
+        }
+        result = er.resolve(doc, sem)
+        self.assertNotIn("5", result["bindings"])
+
 
 class TestLabelAnchorGuards(unittest.TestCase):
     def test_separated_bind(self):
@@ -319,6 +332,23 @@ class TestPhantoms(unittest.TestCase):
         result = er.resolve(doc, sem)
         phantom = next(p for p in result["phantoms"] if p["number"] == "9")
         self.assertEqual(phantom["type"], "mentioned-only")
+
+
+class TestExhibitMentionRegex(unittest.TestCase):
+    def test_trailing_letter_is_not_captured_as_part_of_the_number(self):
+        # "5x" must not be captured as a single number: the digit and Roman
+        # numeral alternatives are separate branches, so a trailing letter
+        # like "x" is never swept into the same run as the digits.
+        match = er.EXHIBIT_MENTION.search("Exhibit 5x Corp acquired the assets.")
+        self.assertEqual(match.group(1), "5")
+
+    def test_plain_number_still_matches(self):
+        match = er.EXHIBIT_MENTION.search("Exhibit 5 details.")
+        self.assertEqual(match.group(1), "5")
+
+    def test_roman_numeral_still_matches(self):
+        match = er.EXHIBIT_MENTION.search("Exhibit I")
+        self.assertEqual(match.group(1), "I")
 
 
 if __name__ == "__main__":

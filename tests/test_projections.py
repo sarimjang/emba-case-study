@@ -96,6 +96,26 @@ class TestReadingView(unittest.TestCase):
         self.assertIn("verified", rendered)
         self.assertIn("unresolved", rendered)
 
+    def test_hierarchy_table_without_roled_cells_not_labeled_as_chart(self):
+        # hierarchy_table exhibits never get roled_cells (only grid_table /
+        # matrix_table / financial_statement do) but they are real detected
+        # tables, not charts, so the placeholder body must not say "chart".
+        doc = make_doc(
+            [page([block("#/texts/0", "Exhibit 5: Org Chart", label="caption")])],
+            tables=[table("#/tables/0", caption_refs=["#/texts/0"])],
+        )
+        sem = {
+            "exhibits": [
+                exhibit(
+                    "exhibit-1", source_refs=["#/tables/0"], etype="hierarchy_table"
+                )
+            ]
+        }
+        stream = cl.linearize(doc, sem)
+        resolution = er.resolve(doc, sem)
+        rendered = cl.render_reading_view(stream, resolution)
+        self.assertNotIn("chart", rendered)
+
 
 class TestRagChunks(unittest.TestCase):
     def test_bidirectional_edge_between_prose_and_exhibit(self):

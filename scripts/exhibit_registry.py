@@ -30,8 +30,8 @@ import math
 import re
 from typing import Any
 
-EXHIBIT_MENTION = re.compile(r"Exhibit\s*([0-9IVXivx]+)", re.IGNORECASE)
-EXHIBIT_LABEL = re.compile(r"^\s*Exhibit\s*([0-9IVXivx]+)\s*$", re.IGNORECASE)
+EXHIBIT_MENTION = re.compile(r"Exhibit\s*(\d+|[IVXivx]+)", re.IGNORECASE)
+EXHIBIT_LABEL = re.compile(r"^\s*Exhibit\s*(\d+|[IVXivx]+)\s*$", re.IGNORECASE)
 
 # Tier B defaults (module-level, overridable).
 WINDOW_BEFORE = 20
@@ -50,7 +50,35 @@ def _normalize(text: str) -> str:
     return re.sub(r"\s+", "", str(text))
 
 
-def _bbox_center(bbox: Any) -> tuple[float, float] | None:
+def _normalize_with_map(text: str) -> tuple[str, list[int]]:
+    """Strip whitespace like :func:`_normalize`, keeping a map back to original indices."""
+    chars: list[str] = []
+    index_map: list[int] = []
+    for i, ch in enumerate(text):
+        if not ch.isspace():
+            chars.append(ch)
+            index_map.append(i)
+    return "".join(chars), index_map
+
+
+def _is_ascii_letter(ch: str | None) -> bool:
+    return ch is not None and ch.isascii() and ch.isalpha()
+
+
+def _is_word_bounded(original: str, index_map: list[int], start: int, end: int) -> bool:
+    """Reject a match that runs into an adjacent Latin letter (e.g. "team" inside "steamed").
+
+    CJK text has no whitespace between words, so this only guards ASCII runs —
+    a CJK head is never rejected by an adjacent ideograph.
+    """
+    before_idx = index_map[start] - 1
+    after_idx = index_map[end - 1] + 1
+    before = original[before_idx] if before_idx >= 0 else None
+    after = original[after_idx] if after_idx < len(original) else None
+    return not _is_ascii_letter(before) and not _is_ascii_letter(after)
+
+
+def bbox_center(bbox: Any) -> tuple[float, float] | None:
     if not (isinstance(bbox, list | tuple) and len(bbox) >= 4):
         return None
     return ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
@@ -157,15 +185,24 @@ def resolve(
         if len(head) >= min_head_len and head not in generic_noun_stoplist
     ]
     for text in block_text.values():
-        normalized = _normalize(text)
+        normalized, index_map = _normalize_with_map(text)
         for match in EXHIBIT_MENTION.finditer(normalized):
             number = match.group(1)
             if number in bindings:
                 continue
-            window = normalized[
-                max(0, match.start() - window_before) : match.end() + window_after
-            ]
-            hits = {exhibit["id"]: exhibit for exhibit, head in heads if head in window}
+            window_start = max(0, match.start() - window_before)
+            window_end = match.end() + window_after
+            window = normalized[window_start:window_end]
+            hits: dict[str, dict[str, Any]] = {}
+            for exhibit, head in heads:
+                local_idx = window.find(head)
+                while local_idx != -1:
+                    abs_start = window_start + local_idx
+                    abs_end = abs_start + len(head)
+                    if _is_word_bounded(text, index_map, abs_start, abs_end):
+                        hits[exhibit["id"]] = exhibit
+                        break
+                    local_idx = window.find(head, local_idx + 1)
             if len(hits) == 1:
                 exhibit = next(iter(hits.values()))
                 object_ref = next(iter(exhibit.get("source_refs") or []), None)
@@ -188,11 +225,11 @@ def resolve(
         if number in bindings:
             continue
         block = label["block"]
-        label_center = _bbox_center(block.get("bbox"))
+        label_center = bbox_center(block.get("bbox"))
         candidates = []
         if label_center is not None:
             for obj in objects_by_page.get(block.get("page_number"), []):
-                center = _bbox_center(obj.get("bbox"))
+                center = bbox_center(obj.get("bbox"))
                 if center is not None:
                     candidates.append((_distance(label_center, center), obj))
         candidates.sort(key=lambda pair: pair[0])

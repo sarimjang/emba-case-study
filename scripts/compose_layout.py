@@ -28,16 +28,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import exhibit_registry as er  # noqa: E402
 
 
-def _bbox_top(bbox: Any) -> float:
+def _bbox_top(bbox: Any) -> float | None:
     if isinstance(bbox, list | tuple) and len(bbox) >= 2:
         return bbox[1]
-    return 0.0
-
-
-def _bbox_center(bbox: Any) -> tuple[float, float] | None:
-    if not (isinstance(bbox, list | tuple) and len(bbox) >= 4):
-        return None
-    return ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+    return None
 
 
 def _point_inside(point: tuple[float, float] | None, bbox: Any) -> bool:
@@ -59,7 +53,7 @@ def _is_true_duplicate(
     text = str(block.get("text", "")).strip()
     if not text:
         return False
-    center = _bbox_center(block.get("bbox"))
+    center = er.bbox_center(block.get("bbox"))
     for tbl in same_page_tables:
         cell_texts = {str(c.get("text", "")).strip() for c in (tbl.get("cells") or [])}
         if text in cell_texts and _point_inside(center, tbl.get("bbox")):
@@ -111,10 +105,16 @@ def linearize(
             # bbox fallback: insert after the last native-order block whose
             # top is at or above the exhibit's top (i.e. appears before it).
             exhibit_top = _bbox_top(obj.get("bbox"))
-            anchor_idx = -1
-            for i, blk in enumerate(blocks):
-                if _bbox_top(blk.get("bbox")) >= exhibit_top:
-                    anchor_idx = i
+            if exhibit_top is None:
+                # No positional information at all: place after the last
+                # block on the page rather than guessing a position.
+                anchor_idx = len(blocks) - 1
+            else:
+                anchor_idx = -1
+                for i, blk in enumerate(blocks):
+                    blk_top = _bbox_top(blk.get("bbox"))
+                    if blk_top is not None and blk_top >= exhibit_top:
+                        anchor_idx = i
             if anchor_idx < 0:
                 head_inserts.append(obj)
             else:
@@ -159,7 +159,9 @@ def _render_table_body(exhibit: dict[str, Any] | None) -> str:
         return "_(unmapped)_"
     cells = exhibit.get("roled_cells")
     if not cells:
-        return "_(chart — image preserved only)_"
+        if exhibit.get("type") == "chart":
+            return "_(chart — image preserved only)_"
+        return "_(no detailed cell data extracted)_"
     ncol = max((c["col"] for c in cells), default=0) + 1
     rows: dict[int, dict[int, str]] = {}
     for c in cells:

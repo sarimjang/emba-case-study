@@ -141,6 +141,37 @@ class TestLinearizeUncaptionedFallback(unittest.TestCase):
             ],
         )
 
+    def test_exhibit_with_no_bbox_and_no_caption_placed_after_last_block(self):
+        # source-document/v1 does not require bbox on tables. With neither a
+        # caption nor a bbox there is no positional information at all, so
+        # the exhibit deliberately lands after the last block on the page.
+        doc = make_doc(
+            [
+                {
+                    "page_number": 1,
+                    "width": 612,
+                    "height": 792,
+                    "blocks": [
+                        block("#/texts/0", "first", bbox=[0, 700, 100, 690]),
+                        block("#/texts/1", "second", bbox=[0, 600, 100, 590]),
+                    ],
+                }
+            ]
+        )
+        doc["tables"] = [table("#/tables/0", bbox=None, caption_refs=[])]
+        sem = {"exhibits": [exhibit("exhibit-1", source_refs=["#/tables/0"])]}
+
+        stream = cl.linearize(doc, sem)
+        kinds = [(s["kind"], s.get("self_ref")) for s in stream]
+        self.assertEqual(
+            kinds,
+            [
+                ("text", "#/texts/0"),
+                ("text", "#/texts/1"),
+                ("exhibit", "#/tables/0"),
+            ],
+        )
+
 
 class TestConservativeDedup(unittest.TestCase):
     def test_true_duplicate_suppressed(self):
