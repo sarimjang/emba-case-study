@@ -35,9 +35,10 @@ Each exhibit self-registers a number from resources already in the data. Every r
 | A | The exhibit's own caption/title literally contains "Exhibit N". | `verified` |
 | B | Prose description bridge: near an "Exhibit N" occurrence, a preceding-biased window contains the exhibit's distinctive caption head (caption minus boilerplate suffix). Single unambiguous match binds. | `inferred` |
 | Label-anchor | A bare "Exhibit N" label block binds to the nearest exhibit object on the same page, subject to the anti-binding guards below. | `hint` |
-| D | Document order matched to the ascending Exhibit-number sequence when counts align. | `hint` |
 
-Tested recall on the pet case: Tier B recovered Exhibit 6 (correctly binding the detected 会員基本資料表 table and correctly leaving the undetected Exhibit 5 unresolved); label-anchor recovered Exhibit I and Exhibit 2 on the collage page. Combined 3 of 6 resolved with 100 percent precision (0 false links).
+Tiers are evaluated in the order caption-number, description bridge, label-anchor. This ordering is a correctness precondition, not a preference: the number-conflict anti-binding guard only works if earlier tiers have already registered their bindings, so label-anchor must run last. Document-order alignment is deliberately NOT a binding tier — it may only corroborate a candidate that another tier already supports, never resolve a reference on its own.
+
+Tested recall on the pet case: Tier B recovered Exhibit 6 (correctly binding the detected 会員基本資料表 table and correctly leaving the undetected Exhibit 5 unresolved); label-anchor recovered Exhibit I and Exhibit 2 on the collage page. Combined 3 of 6 resolved with no observed false links (judged by geometric and semantic plausibility, not against an authoritative exhibit key — see Open decisions).
 
 ## Decision 6: Anti-binding guards (mandatory with label-anchor)
 
@@ -67,9 +68,15 @@ Analyzed via an adversarial pass; deferred because they are non-deterministic or
 
 - The `SEP_RATIO` (0.6) and page-height fraction (0.20) coefficients hold on two cases with wide separation margins; they need validation across more cases before being treated as stable.
 - The precise trigger boundary for phantom-driven re-extraction (which phantom types, which region bounds) is left to the deferred second-pass-OCR change.
-- Whether Tier D ever binds without page/type/local-label corroboration — current stance is hint-only, never a final bind alone.
+- The precision claim (3 of 6 references at 100 percent precision) was judged by geometric and semantic plausibility, not against an authoritative exhibit inventory; a ground-truth key for the test cases would let it be measured rather than asserted.
+- The conservative dedup rule has never fired on a true duplicate (both test cases had zero); a synthetic true-duplicate fixture is required to exercise the suppression branch and confirm the bbox-center predicate catches a real duplicate.
+- Native reading order was spot-verified on one single-column page only; collage-page native order needs verification before the spine is trusted there.
+- The uncaptioned-exhibit bbox fallback is specified as "insert at the position implied by its bbox among native-order blocks" but not as a precise algorithm; task 2.4's collage fixture pins the intended behavior, and a fuller algorithm is deferred until a case needs it (single-column captioned exhibits, the common case, do not exercise the fallback).
 
 ## Risks
 
 - Threshold coefficients tuned on two cases may not generalize; mitigation is that the discriminating signal is physical separation (near hit vs far mis-bind), not a brittle threshold.
 - Tier B caption-head splitting on boilerplate markers can over-truncate Chinese noun phrases into generic nouns; mitigation is a minimum-length and distinctiveness check before a head is used to bind.
+- Tier B's fixed preceding-window default (20 characters) is a known false-negative source: a distinctive head positioned earlier than the window silently fails to bridge. Accepted for a first cut; the window is a tunable default, and a missed bridge degrades to `unresolved`, not a false link.
+- Label-anchor is a `hint` tier and is fallible by construction: on a single-object page whose object no earlier tier resolved, a close but wrong-number label can bind. The number-conflict guard catches only already-resolved numbers/objects, not this case. Accepted because the link is lowest-confidence and RAG consumers can filter to `inferred` or higher; a stronger guard (page-level label/object count consistency) is deferred.
+- A `mentioned-only` phantom records no pointer to the citing prose block, asymmetric with `label-detected-object-undetected`. Accepted for now; adding the citing anchor is a cheap later enhancement if audit tracing needs it.
