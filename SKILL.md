@@ -145,6 +145,22 @@ Check internally:
 - do margins, unit costs, capacity limits, or working-capital implications make sense
 - does the narrative match the numbers
 
+Whenever a number is derived rather than copied from the case (elasticity, blended
+margins, NPV, unit economics), state the assumption right next to where the number
+appears — a reader should never hit a computed figure before knowing what it rests
+on. An appendix assumption list is still useful as a consolidated cross-reference,
+but it must not be the only place an assumption shows up.
+
+For each such derived calculation, also produce a small standalone script that
+reproduces it from those stated inputs (e.g. `outputs/<case-slug>/calculations/<calc-id>.py`
+using `python3`), run it once to confirm its output matches the number quoted in the
+analysis, and write the inputs, formula, and result into a companion markdown file
+(e.g. `outputs/<case-slug>/calculations/<calc-id>.md`). A derived number must not exist
+only as a sentence in the conversation — it must have a script and a record a reader
+can re-run later without re-deriving it from scratch. If the session cannot execute
+code, say so explicitly and fall back to showing the full step-by-step arithmetic inline
+instead of silently skipping this.
+
 Check externally when the user asks for cross-verification or when live context materially affects the answer:
 
 - official regulations
@@ -156,7 +172,7 @@ Use `references/evidence-and-verification.md` for the validation checklist.
 
 Before doing that external step, tell the user what you plan to verify and ask if they want that broader pass.
 
-### 6. Synthesize action options
+### 6. Synthesize action options, then checkpoint the decision with the user
 
 End with decision-ready options, not generic advice.
 
@@ -164,9 +180,18 @@ For each option, answer:
 
 - `How`: what management would actually do
 - `Why`: what evidence and logic support it
-- `Trade-off`: what cost, risk, or sacrifice comes with it
+- `顯性 Trade-off`: the cost, risk, or sacrifice that is directly visible from the case or the analysis
+- `隱性 Trade-off`: the second-order cost that is not immediately obvious — organizational resistance, signal sent to other stakeholders, precedent set, optionality or negotiating leverage given up, opportunity cost of foreclosed paths
 
-Prefer 2-4 mutually distinct options. Include a recommended path only if the user asks, or if the task clearly calls for a point of view.
+Prefer 2-4 mutually distinct options.
+
+Before writing the final decision, stop and checkpoint with the user:
+
+- present all options with both trade-off layers
+- ask the user to pick one, or to state which decision criteria/weights matter most to them
+- if the user has no preference and explicitly asks the model to decide, then commit to a recommendation and state the reasoning
+
+The final `五、課堂思辨與行動決策` output must always end in a stated decision synthesized from that checkpoint — never a neutral list left open with no conclusion. A decision being made is what matters; whether it turns out right or wrong is secondary.
 
 ### 7. Produce the canonical case spec first
 
@@ -261,6 +286,7 @@ When researching, prefer primary or official sources first. Keep the case itself
 ## Interaction Rules
 
 - Recommend a method before acting when there are multiple viable paths.
+- Before finalizing the decision section, always checkpoint with the user: present the options with explicit and implicit trade-offs, and let them choose or set decision criteria before the conclusion is written.
 - Ask for consent before OCR, external browsing, or export generation.
 - Give short, concrete progress updates during extraction and validation.
 - If the user declines a higher-effort step, continue with the best lower-effort path and state the limitation.
@@ -279,6 +305,9 @@ Avoid these mistakes:
 
 - writing a company summary without a decision pivot
 - giving recommendations before naming the real trade-off
+- ending the options section with a neutral list and no decision
+- naming only the explicit trade-off and skipping the implicit, second-order one
+- writing the final decision before checkpointing the option choice with the user
 - trusting case exhibits without checking the arithmetic
 - importing outside facts that overwrite the case chronology without saying so
 - treating every issue as strategy when the root cause is organizational or operational

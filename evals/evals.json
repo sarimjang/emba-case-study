@@ -1,0 +1,26 @@
+{
+  "skill_name": "emba-case-study",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "benihana-pricing-decision",
+      "prompt": "幫我分析這份 Benihana 的個案，重點放在定價策略決策，最後要給我一個明確的決策建議",
+      "expected_output": "決策切入點清楚；量化分析（定價彈性等）前先列出關鍵假設；每個選項同時列出顯性與隱性 trade-off；分析結尾前先呈現選項讓使用者做決策 checkpoint，最終仍產出一個明確決策而非中立列表",
+      "files": ["docs/ref-data/benihana.pdf"]
+    },
+    {
+      "id": 2,
+      "eval_name": "pet-case-classroom-prep",
+      "prompt": "這是我明天要上課的個案，幫我準備討論用的分析，不用輸出成檔案，直接在對話裡給我",
+      "expected_output": "繁體中文輸出；決策主角與決策點清楚；公司/產業背景只保留分析必要的資訊而非整段複述個案內容；利害關係人立場有被納入診斷",
+      "files": ["docs/ref-data/個案-毛小孩的幸福-寵物百分百的創業之路與數位轉型-禮物券該怎麼發.pdf"]
+    },
+    {
+      "id": 3,
+      "eval_name": "benihana-md-export",
+      "prompt": "分析這個個案，然後幫我輸出成一份 md 檔",
+      "expected_output": "產出 canonical case_spec.json，再用 generate_case_md.py 輸出 md 檔；md 內容的選項段落包含顯性/隱性 trade-off 與明確決策結論",
+      "files": ["docs/ref-data/benihana.pdf"]
+    }
+  ]
+}
